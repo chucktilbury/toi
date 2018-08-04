@@ -2,7 +2,6 @@
 #define _SIMPLE_H_
 
 #include "file_stack.h"
-#include "hash_table.h"
 #include "lexer.h"
 #include "context.h"
 #include "sym_table.h"
