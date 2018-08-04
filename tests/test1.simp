@@ -1,0 +1,16 @@
+
+# Check to see if the types are parsed correctly.
+num:asdf = 1234;
+bool:wert = TRUE;
+strg:qwer = "this is a string";
+
+some_name(num:asdf, strg:plart)() {}
+another()(num:result) {}
+yet_another()()
+{
+    num:asdf = 1234;bool:qwe=TRUE;
+    strg: qwert = "";
+
+    asdf = 9823;
+    printf('high dummy!\n');
+}

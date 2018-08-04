@@ -1,0 +1,2721 @@
+Terminals unused in grammar
+
+   OBOX
+   CBOX
+   DOT
+   TILDE
+   PIPE
+   AMPER
+   CARAT
+   END_CONTEXT
+   END_INPUT
+
+
+State 97 conflicts: 2 reduce/reduce
+State 130 conflicts: 2 reduce/reduce
+
+
+Grammar
+
+    0 $accept: module $end
+
+    1 module: module_element
+    2       | module module_element
+
+    3 module_element: import_directive
+    4               | var_definition
+    5               | function_definition
+
+    6 import_directive: IMPORT STRING SCOLON
+
+    7 var_definition: NUM COLON SYMBOL ASSIGN NUMBER SCOLON
+    8               | STRG COLON SYMBOL ASSIGN STRING SCOLON
+    9               | BOOL COLON SYMBOL ASSIGN TRUE SCOLON
+   10               | BOOL COLON SYMBOL ASSIGN FALSE SCOLON
+
+   11 function_definition: SYMBOL function_def_parameters statement_group
+
+   12 function_def_parameters: OPAREN fd_parameter_list CPAREN OPAREN fd_parameter_list CPAREN
+
+   13 fd_parameter: %empty
+   14             | NUM COLON SYMBOL
+   15             | STRG COLON SYMBOL
+   16             | BOOL COLON SYMBOL
+
+   17 fd_parameter_list: fd_parameter
+   18                  | fd_parameter COMMA fd_parameter_list
+
+   19 statement_group: OCURLY statement_list CCURLY
+
+   20 statement_list: statement
+   21               | statement statement_list
+
+   22 statement: var_definition
+   23          | var_assignment
+   24          | function_call
+   25          | if_statement
+   26          | while_statement
+   27          | for_statement
+   28          | switch_statement
+   29          | RETURN SCOLON
+   30          | statement_group
+
+   31 var_assignment: SYMBOL ASSIGN expression SCOLON
+
+   32 function_call: SYMBOL function_call_parameters SCOLON
+
+   33 function_call_parameters: OPAREN fc_parameter_list CPAREN OPAREN fc_parameter_list CPAREN
+
+   34 fc_parameter_list: %empty
+   35                  | fc_parameter
+   36                  | fc_parameter COMMA fc_parameter_list
+
+   37 fc_parameter: SYMBOL
+   38             | arith_expression
+   39             | string_expression
+   40             | TRUE
+   41             | FALSE
+
+   42 expression: boolean_expression
+   43           | arith_expression
+   44           | string_expression
+
+   45 string_expression: STRING
+   46                  | STRING PLUS string_element_list
+
+   47 string_element_list: string_element
+   48                    | string_element PLUS string_element_list
+
+   49 string_element: STRING
+   50               | SYMBOL
+   51               | NUMBER
+   52               | TRUE
+   53               | FALSE
+
+   54 boolean_expression: %empty
+   55                   | TRUE
+   56                   | FALSE
+   57                   | boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   58                   | NOT OPAREN boolean_factor CPAREN
+
+   59 boolean_factor: boolean_expression
+   60               | arith_expression
+   61               | STRING
+   62               | SYMBOL
+
+   63 boolean_function: EQ
+   64                 | NEQ
+   65                 | MORE
+   66                 | LESS
+   67                 | OR
+   68                 | AND
+
+   69 arith_expression: arith_expression PLUS arith_term
+   70                 | arith_expression MINUS arith_term
+   71                 | arith_term
+
+   72 arith_term: arith_term MULT arith_factor
+   73           | arith_term DIV arith_factor
+   74           | arith_term MODULO arith_factor
+   75           | arith_factor
+
+   76 arith_factor: MINUS arith_factor
+   77             | OPAREN arith_expression CPAREN
+   78             | NUMBER
+   79             | SYMBOL
+
+   80 if_statement: IF OPAREN boolean_expression CPAREN statement_group else_clause_list
+   81             | IF OPAREN boolean_expression CPAREN statement_group
+
+   82 else_clause_list: else_clause
+   83                 | else_clause else_clause_list
+
+   84 else_clause: ELSE OPAREN boolean_expression CPAREN statement_group
+
+   85 loop_statement_group: OCURLY loop_statement_list CCURLY
+
+   86 loop_statement_list: loop_statement
+   87                    | loop_statement loop_statement_list
+
+   88 loop_statement: statement
+   89               | CONT SCOLON
+   90               | BREAK SCOLON
+
+   91 while_statement: WHILE OPAREN boolean_expression CPAREN loop_statement_group
+
+   92 for_statement: FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+
+   93 switch_statement: SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY
+   94                 | SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause
+
+   95 case_clause_list: case_clause
+   96                 | case_clause case_clause_list
+
+   97 case_clause: CASE OPAREN SYMBOL CPAREN statement_group
+   98            | CASE OPAREN NUMBER CPAREN statement_group
+   99            | CASE OPAREN STRING CPAREN statement_group
+  100            | CASE OPAREN TRUE CPAREN statement_group
+  101            | CASE OPAREN FALSE CPAREN statement_group
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+NUM (258) 7 14
+STRG (259) 8 15
+BOOL (260) 9 10 16
+IMPORT (261) 6
+RETURN (262) 29
+BREAK (263) 90
+CONT (264) 89
+IF (265) 80 81
+ELSE (266) 84
+WHILE (267) 91
+FOR (268) 92
+SWITCH (269) 93 94
+CASE (270) 97 98 99 100 101
+OR (271) 67
+AND (272) 68
+NOT (273) 58
+EQ (274) 63
+NEQ (275) 64
+MORE (276) 65
+LESS (277) 66
+TRUE (278) 9 40 52 55 100
+FALSE (279) 10 41 53 56 101
+OPAREN (280) 12 33 57 58 77 80 81 84 91 92 93 94 97 98 99 100 101
+CPAREN (281) 12 33 57 58 77 80 81 84 91 92 93 94 97 98 99 100 101
+OCURLY (282) 19 85 93 94
+CCURLY (283) 19 85 93 94
+OBOX (284)
+CBOX (285)
+COMMA (286) 18 36 57
+SCOLON (287) 6 7 8 9 10 29 31 32 89 90 92
+DOT (288)
+COLON (289) 7 8 9 10 14 15 16
+PLUS (290) 46 48 69
+MINUS (291) 70 76
+MULT (292) 72
+DIV (293) 73
+MODULO (294) 74
+ASSIGN (295) 7 8 9 10 31
+SYMBOL (296) 7 8 9 10 11 14 15 16 31 32 37 50 62 79 93 94 97
+NUMBER (297) 7 51 78 98
+STRING (298) 6 8 45 46 49 61 99
+TILDE (299)
+PIPE (300)
+AMPER (301)
+CARAT (302)
+END_CONTEXT (303)
+END_INPUT (304)
+
+
+Nonterminals, with rules where they appear
+
+$accept (50)
+    on left: 0
+module (51)
+    on left: 1 2, on right: 0 2
+module_element (52)
+    on left: 3 4 5, on right: 1 2
+import_directive (53)
+    on left: 6, on right: 3
+var_definition (54)
+    on left: 7 8 9 10, on right: 4 22
+function_definition (55)
+    on left: 11, on right: 5
+function_def_parameters (56)
+    on left: 12, on right: 11
+fd_parameter (57)
+    on left: 13 14 15 16, on right: 17 18
+fd_parameter_list (58)
+    on left: 17 18, on right: 12 18
+statement_group (59)
+    on left: 19, on right: 11 30 80 81 84 97 98 99 100 101
+statement_list (60)
+    on left: 20 21, on right: 19 21
+statement (61)
+    on left: 22 23 24 25 26 27 28 29 30, on right: 20 21 88
+var_assignment (62)
+    on left: 31, on right: 23 92
+function_call (63)
+    on left: 32, on right: 24
+function_call_parameters (64)
+    on left: 33, on right: 32
+fc_parameter_list (65)
+    on left: 34 35 36, on right: 33 36
+fc_parameter (66)
+    on left: 37 38 39 40 41, on right: 35 36
+expression (67)
+    on left: 42 43 44, on right: 31
+string_expression (68)
+    on left: 45 46, on right: 39 44
+string_element_list (69)
+    on left: 47 48, on right: 46 48
+string_element (70)
+    on left: 49 50 51 52 53, on right: 47 48
+boolean_expression (71)
+    on left: 54 55 56 57 58, on right: 42 59 80 81 84 91 92
+boolean_factor (72)
+    on left: 59 60 61 62, on right: 57 58
+boolean_function (73)
+    on left: 63 64 65 66 67 68, on right: 57
+arith_expression (74)
+    on left: 69 70 71, on right: 38 43 60 69 70 77 92
+arith_term (75)
+    on left: 72 73 74 75, on right: 69 70 71 72 73 74
+arith_factor (76)
+    on left: 76 77 78 79, on right: 72 73 74 75 76
+if_statement (77)
+    on left: 80 81, on right: 25
+else_clause_list (78)
+    on left: 82 83, on right: 80 83
+else_clause (79)
+    on left: 84, on right: 82 83 94
+loop_statement_group (80)
+    on left: 85, on right: 91 92
+loop_statement_list (81)
+    on left: 86 87, on right: 85 87
+loop_statement (82)
+    on left: 88 89 90, on right: 86 87
+while_statement (83)
+    on left: 91, on right: 26
+for_statement (84)
+    on left: 92, on right: 27
+switch_statement (85)
+    on left: 93 94, on right: 28
+case_clause_list (86)
+    on left: 95 96, on right: 93 94 96
+case_clause (87)
+    on left: 97 98 99 100 101, on right: 95 96
+
+
+State 0
+
+    0 $accept: . module $end
+    1 module: . module_element
+    2       | . module module_element
+    3 module_element: . import_directive
+    4               | . var_definition
+    5               | . function_definition
+    6 import_directive: . IMPORT STRING SCOLON
+    7 var_definition: . NUM COLON SYMBOL ASSIGN NUMBER SCOLON
+    8               | . STRG COLON SYMBOL ASSIGN STRING SCOLON
+    9               | . BOOL COLON SYMBOL ASSIGN TRUE SCOLON
+   10               | . BOOL COLON SYMBOL ASSIGN FALSE SCOLON
+   11 function_definition: . SYMBOL function_def_parameters statement_group
+
+    NUM     shift, and go to state 1
+    STRG    shift, and go to state 2
+    BOOL    shift, and go to state 3
+    IMPORT  shift, and go to state 4
+    SYMBOL  shift, and go to state 5
+
+    module               go to state 6
+    module_element       go to state 7
+    import_directive     go to state 8
+    var_definition       go to state 9
+    function_definition  go to state 10
+
+
+State 1
+
+    7 var_definition: NUM . COLON SYMBOL ASSIGN NUMBER SCOLON
+
+    COLON  shift, and go to state 11
+
+
+State 2
+
+    8 var_definition: STRG . COLON SYMBOL ASSIGN STRING SCOLON
+
+    COLON  shift, and go to state 12
+
+
+State 3
+
+    9 var_definition: BOOL . COLON SYMBOL ASSIGN TRUE SCOLON
+   10               | BOOL . COLON SYMBOL ASSIGN FALSE SCOLON
+
+    COLON  shift, and go to state 13
+
+
+State 4
+
+    6 import_directive: IMPORT . STRING SCOLON
+
+    STRING  shift, and go to state 14
+
+
+State 5
+
+   11 function_definition: SYMBOL . function_def_parameters statement_group
+   12 function_def_parameters: . OPAREN fd_parameter_list CPAREN OPAREN fd_parameter_list CPAREN
+
+    OPAREN  shift, and go to state 15
+
+    function_def_parameters  go to state 16
+
+
+State 6
+
+    0 $accept: module . $end
+    2 module: module . module_element
+    3 module_element: . import_directive
+    4               | . var_definition
+    5               | . function_definition
+    6 import_directive: . IMPORT STRING SCOLON
+    7 var_definition: . NUM COLON SYMBOL ASSIGN NUMBER SCOLON
+    8               | . STRG COLON SYMBOL ASSIGN STRING SCOLON
+    9               | . BOOL COLON SYMBOL ASSIGN TRUE SCOLON
+   10               | . BOOL COLON SYMBOL ASSIGN FALSE SCOLON
+   11 function_definition: . SYMBOL function_def_parameters statement_group
+
+    $end    shift, and go to state 17
+    NUM     shift, and go to state 1
+    STRG    shift, and go to state 2
+    BOOL    shift, and go to state 3
+    IMPORT  shift, and go to state 4
+    SYMBOL  shift, and go to state 5
+
+    module_element       go to state 18
+    import_directive     go to state 8
+    var_definition       go to state 9
+    function_definition  go to state 10
+
+
+State 7
+
+    1 module: module_element .
+
+    $default  reduce using rule 1 (module)
+
+
+State 8
+
+    3 module_element: import_directive .
+
+    $default  reduce using rule 3 (module_element)
+
+
+State 9
+
+    4 module_element: var_definition .
+
+    $default  reduce using rule 4 (module_element)
+
+
+State 10
+
+    5 module_element: function_definition .
+
+    $default  reduce using rule 5 (module_element)
+
+
+State 11
+
+    7 var_definition: NUM COLON . SYMBOL ASSIGN NUMBER SCOLON
+
+    SYMBOL  shift, and go to state 19
+
+
+State 12
+
+    8 var_definition: STRG COLON . SYMBOL ASSIGN STRING SCOLON
+
+    SYMBOL  shift, and go to state 20
+
+
+State 13
+
+    9 var_definition: BOOL COLON . SYMBOL ASSIGN TRUE SCOLON
+   10               | BOOL COLON . SYMBOL ASSIGN FALSE SCOLON
+
+    SYMBOL  shift, and go to state 21
+
+
+State 14
+
+    6 import_directive: IMPORT STRING . SCOLON
+
+    SCOLON  shift, and go to state 22
+
+
+State 15
+
+   12 function_def_parameters: OPAREN . fd_parameter_list CPAREN OPAREN fd_parameter_list CPAREN
+   13 fd_parameter: . %empty  [CPAREN, COMMA]
+   14             | . NUM COLON SYMBOL
+   15             | . STRG COLON SYMBOL
+   16             | . BOOL COLON SYMBOL
+   17 fd_parameter_list: . fd_parameter
+   18                  | . fd_parameter COMMA fd_parameter_list
+
+    NUM   shift, and go to state 23
+    STRG  shift, and go to state 24
+    BOOL  shift, and go to state 25
+
+    $default  reduce using rule 13 (fd_parameter)
+
+    fd_parameter       go to state 26
+    fd_parameter_list  go to state 27
+
+
+State 16
+
+   11 function_definition: SYMBOL function_def_parameters . statement_group
+   19 statement_group: . OCURLY statement_list CCURLY
+
+    OCURLY  shift, and go to state 28
+
+    statement_group  go to state 29
+
+
+State 17
+
+    0 $accept: module $end .
+
+    $default  accept
+
+
+State 18
+
+    2 module: module module_element .
+
+    $default  reduce using rule 2 (module)
+
+
+State 19
+
+    7 var_definition: NUM COLON SYMBOL . ASSIGN NUMBER SCOLON
+
+    ASSIGN  shift, and go to state 30
+
+
+State 20
+
+    8 var_definition: STRG COLON SYMBOL . ASSIGN STRING SCOLON
+
+    ASSIGN  shift, and go to state 31
+
+
+State 21
+
+    9 var_definition: BOOL COLON SYMBOL . ASSIGN TRUE SCOLON
+   10               | BOOL COLON SYMBOL . ASSIGN FALSE SCOLON
+
+    ASSIGN  shift, and go to state 32
+
+
+State 22
+
+    6 import_directive: IMPORT STRING SCOLON .
+
+    $default  reduce using rule 6 (import_directive)
+
+
+State 23
+
+   14 fd_parameter: NUM . COLON SYMBOL
+
+    COLON  shift, and go to state 33
+
+
+State 24
+
+   15 fd_parameter: STRG . COLON SYMBOL
+
+    COLON  shift, and go to state 34
+
+
+State 25
+
+   16 fd_parameter: BOOL . COLON SYMBOL
+
+    COLON  shift, and go to state 35
+
+
+State 26
+
+   17 fd_parameter_list: fd_parameter .  [CPAREN]
+   18                  | fd_parameter . COMMA fd_parameter_list
+
+    COMMA  shift, and go to state 36
+
+    $default  reduce using rule 17 (fd_parameter_list)
+
+
+State 27
+
+   12 function_def_parameters: OPAREN fd_parameter_list . CPAREN OPAREN fd_parameter_list CPAREN
+
+    CPAREN  shift, and go to state 37
+
+
+State 28
+
+    7 var_definition: . NUM COLON SYMBOL ASSIGN NUMBER SCOLON
+    8               | . STRG COLON SYMBOL ASSIGN STRING SCOLON
+    9               | . BOOL COLON SYMBOL ASSIGN TRUE SCOLON
+   10               | . BOOL COLON SYMBOL ASSIGN FALSE SCOLON
+   19 statement_group: . OCURLY statement_list CCURLY
+   19                | OCURLY . statement_list CCURLY
+   20 statement_list: . statement
+   21               | . statement statement_list
+   22 statement: . var_definition
+   23          | . var_assignment
+   24          | . function_call
+   25          | . if_statement
+   26          | . while_statement
+   27          | . for_statement
+   28          | . switch_statement
+   29          | . RETURN SCOLON
+   30          | . statement_group
+   31 var_assignment: . SYMBOL ASSIGN expression SCOLON
+   32 function_call: . SYMBOL function_call_parameters SCOLON
+   80 if_statement: . IF OPAREN boolean_expression CPAREN statement_group else_clause_list
+   81             | . IF OPAREN boolean_expression CPAREN statement_group
+   91 while_statement: . WHILE OPAREN boolean_expression CPAREN loop_statement_group
+   92 for_statement: . FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+   93 switch_statement: . SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY
+   94                 | . SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause
+
+    NUM     shift, and go to state 1
+    STRG    shift, and go to state 2
+    BOOL    shift, and go to state 3
+    RETURN  shift, and go to state 38
+    IF      shift, and go to state 39
+    WHILE   shift, and go to state 40
+    FOR     shift, and go to state 41
+    SWITCH  shift, and go to state 42
+    OCURLY  shift, and go to state 28
+    SYMBOL  shift, and go to state 43
+
+    var_definition    go to state 44
+    statement_group   go to state 45
+    statement_list    go to state 46
+    statement         go to state 47
+    var_assignment    go to state 48
+    function_call     go to state 49
+    if_statement      go to state 50
+    while_statement   go to state 51
+    for_statement     go to state 52
+    switch_statement  go to state 53
+
+
+State 29
+
+   11 function_definition: SYMBOL function_def_parameters statement_group .
+
+    $default  reduce using rule 11 (function_definition)
+
+
+State 30
+
+    7 var_definition: NUM COLON SYMBOL ASSIGN . NUMBER SCOLON
+
+    NUMBER  shift, and go to state 54
+
+
+State 31
+
+    8 var_definition: STRG COLON SYMBOL ASSIGN . STRING SCOLON
+
+    STRING  shift, and go to state 55
+
+
+State 32
+
+    9 var_definition: BOOL COLON SYMBOL ASSIGN . TRUE SCOLON
+   10               | BOOL COLON SYMBOL ASSIGN . FALSE SCOLON
+
+    TRUE   shift, and go to state 56
+    FALSE  shift, and go to state 57
+
+
+State 33
+
+   14 fd_parameter: NUM COLON . SYMBOL
+
+    SYMBOL  shift, and go to state 58
+
+
+State 34
+
+   15 fd_parameter: STRG COLON . SYMBOL
+
+    SYMBOL  shift, and go to state 59
+
+
+State 35
+
+   16 fd_parameter: BOOL COLON . SYMBOL
+
+    SYMBOL  shift, and go to state 60
+
+
+State 36
+
+   13 fd_parameter: . %empty  [CPAREN, COMMA]
+   14             | . NUM COLON SYMBOL
+   15             | . STRG COLON SYMBOL
+   16             | . BOOL COLON SYMBOL
+   17 fd_parameter_list: . fd_parameter
+   18                  | . fd_parameter COMMA fd_parameter_list
+   18                  | fd_parameter COMMA . fd_parameter_list
+
+    NUM   shift, and go to state 23
+    STRG  shift, and go to state 24
+    BOOL  shift, and go to state 25
+
+    $default  reduce using rule 13 (fd_parameter)
+
+    fd_parameter       go to state 26
+    fd_parameter_list  go to state 61
+
+
+State 37
+
+   12 function_def_parameters: OPAREN fd_parameter_list CPAREN . OPAREN fd_parameter_list CPAREN
+
+    OPAREN  shift, and go to state 62
+
+
+State 38
+
+   29 statement: RETURN . SCOLON
+
+    SCOLON  shift, and go to state 63
+
+
+State 39
+
+   80 if_statement: IF . OPAREN boolean_expression CPAREN statement_group else_clause_list
+   81             | IF . OPAREN boolean_expression CPAREN statement_group
+
+    OPAREN  shift, and go to state 64
+
+
+State 40
+
+   91 while_statement: WHILE . OPAREN boolean_expression CPAREN loop_statement_group
+
+    OPAREN  shift, and go to state 65
+
+
+State 41
+
+   92 for_statement: FOR . OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+
+    OPAREN  shift, and go to state 66
+
+
+State 42
+
+   93 switch_statement: SWITCH . OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY
+   94                 | SWITCH . OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause
+
+    OPAREN  shift, and go to state 67
+
+
+State 43
+
+   31 var_assignment: SYMBOL . ASSIGN expression SCOLON
+   32 function_call: SYMBOL . function_call_parameters SCOLON
+   33 function_call_parameters: . OPAREN fc_parameter_list CPAREN OPAREN fc_parameter_list CPAREN
+
+    OPAREN  shift, and go to state 68
+    ASSIGN  shift, and go to state 69
+
+    function_call_parameters  go to state 70
+
+
+State 44
+
+   22 statement: var_definition .
+
+    $default  reduce using rule 22 (statement)
+
+
+State 45
+
+   30 statement: statement_group .
+
+    $default  reduce using rule 30 (statement)
+
+
+State 46
+
+   19 statement_group: OCURLY statement_list . CCURLY
+
+    CCURLY  shift, and go to state 71
+
+
+State 47
+
+    7 var_definition: . NUM COLON SYMBOL ASSIGN NUMBER SCOLON
+    8               | . STRG COLON SYMBOL ASSIGN STRING SCOLON
+    9               | . BOOL COLON SYMBOL ASSIGN TRUE SCOLON
+   10               | . BOOL COLON SYMBOL ASSIGN FALSE SCOLON
+   19 statement_group: . OCURLY statement_list CCURLY
+   20 statement_list: . statement
+   20               | statement .  [CCURLY]
+   21               | . statement statement_list
+   21               | statement . statement_list
+   22 statement: . var_definition
+   23          | . var_assignment
+   24          | . function_call
+   25          | . if_statement
+   26          | . while_statement
+   27          | . for_statement
+   28          | . switch_statement
+   29          | . RETURN SCOLON
+   30          | . statement_group
+   31 var_assignment: . SYMBOL ASSIGN expression SCOLON
+   32 function_call: . SYMBOL function_call_parameters SCOLON
+   80 if_statement: . IF OPAREN boolean_expression CPAREN statement_group else_clause_list
+   81             | . IF OPAREN boolean_expression CPAREN statement_group
+   91 while_statement: . WHILE OPAREN boolean_expression CPAREN loop_statement_group
+   92 for_statement: . FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+   93 switch_statement: . SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY
+   94                 | . SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause
+
+    NUM     shift, and go to state 1
+    STRG    shift, and go to state 2
+    BOOL    shift, and go to state 3
+    RETURN  shift, and go to state 38
+    IF      shift, and go to state 39
+    WHILE   shift, and go to state 40
+    FOR     shift, and go to state 41
+    SWITCH  shift, and go to state 42
+    OCURLY  shift, and go to state 28
+    SYMBOL  shift, and go to state 43
+
+    $default  reduce using rule 20 (statement_list)
+
+    var_definition    go to state 44
+    statement_group   go to state 45
+    statement_list    go to state 72
+    statement         go to state 47
+    var_assignment    go to state 48
+    function_call     go to state 49
+    if_statement      go to state 50
+    while_statement   go to state 51
+    for_statement     go to state 52
+    switch_statement  go to state 53
+
+
+State 48
+
+   23 statement: var_assignment .
+
+    $default  reduce using rule 23 (statement)
+
+
+State 49
+
+   24 statement: function_call .
+
+    $default  reduce using rule 24 (statement)
+
+
+State 50
+
+   25 statement: if_statement .
+
+    $default  reduce using rule 25 (statement)
+
+
+State 51
+
+   26 statement: while_statement .
+
+    $default  reduce using rule 26 (statement)
+
+
+State 52
+
+   27 statement: for_statement .
+
+    $default  reduce using rule 27 (statement)
+
+
+State 53
+
+   28 statement: switch_statement .
+
+    $default  reduce using rule 28 (statement)
+
+
+State 54
+
+    7 var_definition: NUM COLON SYMBOL ASSIGN NUMBER . SCOLON
+
+    SCOLON  shift, and go to state 73
+
+
+State 55
+
+    8 var_definition: STRG COLON SYMBOL ASSIGN STRING . SCOLON
+
+    SCOLON  shift, and go to state 74
+
+
+State 56
+
+    9 var_definition: BOOL COLON SYMBOL ASSIGN TRUE . SCOLON
+
+    SCOLON  shift, and go to state 75
+
+
+State 57
+
+   10 var_definition: BOOL COLON SYMBOL ASSIGN FALSE . SCOLON
+
+    SCOLON  shift, and go to state 76
+
+
+State 58
+
+   14 fd_parameter: NUM COLON SYMBOL .
+
+    $default  reduce using rule 14 (fd_parameter)
+
+
+State 59
+
+   15 fd_parameter: STRG COLON SYMBOL .
+
+    $default  reduce using rule 15 (fd_parameter)
+
+
+State 60
+
+   16 fd_parameter: BOOL COLON SYMBOL .
+
+    $default  reduce using rule 16 (fd_parameter)
+
+
+State 61
+
+   18 fd_parameter_list: fd_parameter COMMA fd_parameter_list .
+
+    $default  reduce using rule 18 (fd_parameter_list)
+
+
+State 62
+
+   12 function_def_parameters: OPAREN fd_parameter_list CPAREN OPAREN . fd_parameter_list CPAREN
+   13 fd_parameter: . %empty  [CPAREN, COMMA]
+   14             | . NUM COLON SYMBOL
+   15             | . STRG COLON SYMBOL
+   16             | . BOOL COLON SYMBOL
+   17 fd_parameter_list: . fd_parameter
+   18                  | . fd_parameter COMMA fd_parameter_list
+
+    NUM   shift, and go to state 23
+    STRG  shift, and go to state 24
+    BOOL  shift, and go to state 25
+
+    $default  reduce using rule 13 (fd_parameter)
+
+    fd_parameter       go to state 26
+    fd_parameter_list  go to state 77
+
+
+State 63
+
+   29 statement: RETURN SCOLON .
+
+    $default  reduce using rule 29 (statement)
+
+
+State 64
+
+   54 boolean_expression: . %empty  [CPAREN]
+   55                   | . TRUE
+   56                   | . FALSE
+   57                   | . boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   58                   | . NOT OPAREN boolean_factor CPAREN
+   63 boolean_function: . EQ
+   64                 | . NEQ
+   65                 | . MORE
+   66                 | . LESS
+   67                 | . OR
+   68                 | . AND
+   80 if_statement: IF OPAREN . boolean_expression CPAREN statement_group else_clause_list
+   81             | IF OPAREN . boolean_expression CPAREN statement_group
+
+    OR     shift, and go to state 78
+    AND    shift, and go to state 79
+    NOT    shift, and go to state 80
+    EQ     shift, and go to state 81
+    NEQ    shift, and go to state 82
+    MORE   shift, and go to state 83
+    LESS   shift, and go to state 84
+    TRUE   shift, and go to state 85
+    FALSE  shift, and go to state 86
+
+    $default  reduce using rule 54 (boolean_expression)
+
+    boolean_expression  go to state 87
+    boolean_function    go to state 88
+
+
+State 65
+
+   54 boolean_expression: . %empty  [CPAREN]
+   55                   | . TRUE
+   56                   | . FALSE
+   57                   | . boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   58                   | . NOT OPAREN boolean_factor CPAREN
+   63 boolean_function: . EQ
+   64                 | . NEQ
+   65                 | . MORE
+   66                 | . LESS
+   67                 | . OR
+   68                 | . AND
+   91 while_statement: WHILE OPAREN . boolean_expression CPAREN loop_statement_group
+
+    OR     shift, and go to state 78
+    AND    shift, and go to state 79
+    NOT    shift, and go to state 80
+    EQ     shift, and go to state 81
+    NEQ    shift, and go to state 82
+    MORE   shift, and go to state 83
+    LESS   shift, and go to state 84
+    TRUE   shift, and go to state 85
+    FALSE  shift, and go to state 86
+
+    $default  reduce using rule 54 (boolean_expression)
+
+    boolean_expression  go to state 89
+    boolean_function    go to state 88
+
+
+State 66
+
+   31 var_assignment: . SYMBOL ASSIGN expression SCOLON
+   92 for_statement: FOR OPAREN . var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+
+    SYMBOL  shift, and go to state 90
+
+    var_assignment  go to state 91
+
+
+State 67
+
+   93 switch_statement: SWITCH OPAREN . SYMBOL CPAREN OCURLY case_clause_list CCURLY
+   94                 | SWITCH OPAREN . SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause
+
+    SYMBOL  shift, and go to state 92
+
+
+State 68
+
+   33 function_call_parameters: OPAREN . fc_parameter_list CPAREN OPAREN fc_parameter_list CPAREN
+   34 fc_parameter_list: . %empty  [CPAREN]
+   35                  | . fc_parameter
+   36                  | . fc_parameter COMMA fc_parameter_list
+   37 fc_parameter: . SYMBOL
+   38             | . arith_expression
+   39             | . string_expression
+   40             | . TRUE
+   41             | . FALSE
+   45 string_expression: . STRING
+   46                  | . STRING PLUS string_element_list
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    TRUE    shift, and go to state 93
+    FALSE   shift, and go to state 94
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 97
+    NUMBER  shift, and go to state 98
+    STRING  shift, and go to state 99
+
+    $default  reduce using rule 34 (fc_parameter_list)
+
+    fc_parameter_list  go to state 100
+    fc_parameter       go to state 101
+    string_expression  go to state 102
+    arith_expression   go to state 103
+    arith_term         go to state 104
+    arith_factor       go to state 105
+
+
+State 69
+
+   31 var_assignment: SYMBOL ASSIGN . expression SCOLON
+   42 expression: . boolean_expression
+   43           | . arith_expression
+   44           | . string_expression
+   45 string_expression: . STRING
+   46                  | . STRING PLUS string_element_list
+   54 boolean_expression: . %empty  [SCOLON]
+   55                   | . TRUE
+   56                   | . FALSE
+   57                   | . boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   58                   | . NOT OPAREN boolean_factor CPAREN
+   63 boolean_function: . EQ
+   64                 | . NEQ
+   65                 | . MORE
+   66                 | . LESS
+   67                 | . OR
+   68                 | . AND
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OR      shift, and go to state 78
+    AND     shift, and go to state 79
+    NOT     shift, and go to state 80
+    EQ      shift, and go to state 81
+    NEQ     shift, and go to state 82
+    MORE    shift, and go to state 83
+    LESS    shift, and go to state 84
+    TRUE    shift, and go to state 85
+    FALSE   shift, and go to state 86
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+    STRING  shift, and go to state 99
+
+    $default  reduce using rule 54 (boolean_expression)
+
+    expression          go to state 107
+    string_expression   go to state 108
+    boolean_expression  go to state 109
+    boolean_function    go to state 88
+    arith_expression    go to state 110
+    arith_term          go to state 104
+    arith_factor        go to state 105
+
+
+State 70
+
+   32 function_call: SYMBOL function_call_parameters . SCOLON
+
+    SCOLON  shift, and go to state 111
+
+
+State 71
+
+   19 statement_group: OCURLY statement_list CCURLY .
+
+    $default  reduce using rule 19 (statement_group)
+
+
+State 72
+
+   21 statement_list: statement statement_list .
+
+    $default  reduce using rule 21 (statement_list)
+
+
+State 73
+
+    7 var_definition: NUM COLON SYMBOL ASSIGN NUMBER SCOLON .
+
+    $default  reduce using rule 7 (var_definition)
+
+
+State 74
+
+    8 var_definition: STRG COLON SYMBOL ASSIGN STRING SCOLON .
+
+    $default  reduce using rule 8 (var_definition)
+
+
+State 75
+
+    9 var_definition: BOOL COLON SYMBOL ASSIGN TRUE SCOLON .
+
+    $default  reduce using rule 9 (var_definition)
+
+
+State 76
+
+   10 var_definition: BOOL COLON SYMBOL ASSIGN FALSE SCOLON .
+
+    $default  reduce using rule 10 (var_definition)
+
+
+State 77
+
+   12 function_def_parameters: OPAREN fd_parameter_list CPAREN OPAREN fd_parameter_list . CPAREN
+
+    CPAREN  shift, and go to state 112
+
+
+State 78
+
+   67 boolean_function: OR .
+
+    $default  reduce using rule 67 (boolean_function)
+
+
+State 79
+
+   68 boolean_function: AND .
+
+    $default  reduce using rule 68 (boolean_function)
+
+
+State 80
+
+   58 boolean_expression: NOT . OPAREN boolean_factor CPAREN
+
+    OPAREN  shift, and go to state 113
+
+
+State 81
+
+   63 boolean_function: EQ .
+
+    $default  reduce using rule 63 (boolean_function)
+
+
+State 82
+
+   64 boolean_function: NEQ .
+
+    $default  reduce using rule 64 (boolean_function)
+
+
+State 83
+
+   65 boolean_function: MORE .
+
+    $default  reduce using rule 65 (boolean_function)
+
+
+State 84
+
+   66 boolean_function: LESS .
+
+    $default  reduce using rule 66 (boolean_function)
+
+
+State 85
+
+   55 boolean_expression: TRUE .
+
+    $default  reduce using rule 55 (boolean_expression)
+
+
+State 86
+
+   56 boolean_expression: FALSE .
+
+    $default  reduce using rule 56 (boolean_expression)
+
+
+State 87
+
+   80 if_statement: IF OPAREN boolean_expression . CPAREN statement_group else_clause_list
+   81             | IF OPAREN boolean_expression . CPAREN statement_group
+
+    CPAREN  shift, and go to state 114
+
+
+State 88
+
+   57 boolean_expression: boolean_function . OPAREN boolean_factor COMMA boolean_factor CPAREN
+
+    OPAREN  shift, and go to state 115
+
+
+State 89
+
+   91 while_statement: WHILE OPAREN boolean_expression . CPAREN loop_statement_group
+
+    CPAREN  shift, and go to state 116
+
+
+State 90
+
+   31 var_assignment: SYMBOL . ASSIGN expression SCOLON
+
+    ASSIGN  shift, and go to state 69
+
+
+State 91
+
+   92 for_statement: FOR OPAREN var_assignment . SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+
+    SCOLON  shift, and go to state 117
+
+
+State 92
+
+   93 switch_statement: SWITCH OPAREN SYMBOL . CPAREN OCURLY case_clause_list CCURLY
+   94                 | SWITCH OPAREN SYMBOL . CPAREN OCURLY case_clause_list CCURLY else_clause
+
+    CPAREN  shift, and go to state 118
+
+
+State 93
+
+   40 fc_parameter: TRUE .
+
+    $default  reduce using rule 40 (fc_parameter)
+
+
+State 94
+
+   41 fc_parameter: FALSE .
+
+    $default  reduce using rule 41 (fc_parameter)
+
+
+State 95
+
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   77             | OPAREN . arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+
+    arith_expression  go to state 119
+    arith_term        go to state 104
+    arith_factor      go to state 105
+
+
+State 96
+
+   76 arith_factor: . MINUS arith_factor
+   76             | MINUS . arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+
+    arith_factor  go to state 120
+
+
+State 97
+
+   37 fc_parameter: SYMBOL .  [CPAREN, COMMA]
+   79 arith_factor: SYMBOL .  [CPAREN, COMMA, PLUS, MINUS, MULT, DIV, MODULO]
+
+    CPAREN    reduce using rule 37 (fc_parameter)
+    CPAREN    [reduce using rule 79 (arith_factor)]
+    COMMA     reduce using rule 37 (fc_parameter)
+    COMMA     [reduce using rule 79 (arith_factor)]
+    $default  reduce using rule 79 (arith_factor)
+
+
+State 98
+
+   78 arith_factor: NUMBER .
+
+    $default  reduce using rule 78 (arith_factor)
+
+
+State 99
+
+   45 string_expression: STRING .  [CPAREN, COMMA, SCOLON]
+   46                  | STRING . PLUS string_element_list
+
+    PLUS  shift, and go to state 121
+
+    $default  reduce using rule 45 (string_expression)
+
+
+State 100
+
+   33 function_call_parameters: OPAREN fc_parameter_list . CPAREN OPAREN fc_parameter_list CPAREN
+
+    CPAREN  shift, and go to state 122
+
+
+State 101
+
+   35 fc_parameter_list: fc_parameter .  [CPAREN]
+   36                  | fc_parameter . COMMA fc_parameter_list
+
+    COMMA  shift, and go to state 123
+
+    $default  reduce using rule 35 (fc_parameter_list)
+
+
+State 102
+
+   39 fc_parameter: string_expression .
+
+    $default  reduce using rule 39 (fc_parameter)
+
+
+State 103
+
+   38 fc_parameter: arith_expression .  [CPAREN, COMMA]
+   69 arith_expression: arith_expression . PLUS arith_term
+   70                 | arith_expression . MINUS arith_term
+
+    PLUS   shift, and go to state 124
+    MINUS  shift, and go to state 125
+
+    $default  reduce using rule 38 (fc_parameter)
+
+
+State 104
+
+   71 arith_expression: arith_term .  [CPAREN, COMMA, SCOLON, PLUS, MINUS]
+   72 arith_term: arith_term . MULT arith_factor
+   73           | arith_term . DIV arith_factor
+   74           | arith_term . MODULO arith_factor
+
+    MULT    shift, and go to state 126
+    DIV     shift, and go to state 127
+    MODULO  shift, and go to state 128
+
+    $default  reduce using rule 71 (arith_expression)
+
+
+State 105
+
+   75 arith_term: arith_factor .
+
+    $default  reduce using rule 75 (arith_term)
+
+
+State 106
+
+   79 arith_factor: SYMBOL .
+
+    $default  reduce using rule 79 (arith_factor)
+
+
+State 107
+
+   31 var_assignment: SYMBOL ASSIGN expression . SCOLON
+
+    SCOLON  shift, and go to state 129
+
+
+State 108
+
+   44 expression: string_expression .
+
+    $default  reduce using rule 44 (expression)
+
+
+State 109
+
+   42 expression: boolean_expression .
+
+    $default  reduce using rule 42 (expression)
+
+
+State 110
+
+   43 expression: arith_expression .  [SCOLON]
+   69 arith_expression: arith_expression . PLUS arith_term
+   70                 | arith_expression . MINUS arith_term
+
+    PLUS   shift, and go to state 124
+    MINUS  shift, and go to state 125
+
+    $default  reduce using rule 43 (expression)
+
+
+State 111
+
+   32 function_call: SYMBOL function_call_parameters SCOLON .
+
+    $default  reduce using rule 32 (function_call)
+
+
+State 112
+
+   12 function_def_parameters: OPAREN fd_parameter_list CPAREN OPAREN fd_parameter_list CPAREN .
+
+    $default  reduce using rule 12 (function_def_parameters)
+
+
+State 113
+
+   54 boolean_expression: . %empty  [CPAREN]
+   55                   | . TRUE
+   56                   | . FALSE
+   57                   | . boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   58                   | . NOT OPAREN boolean_factor CPAREN
+   58                   | NOT OPAREN . boolean_factor CPAREN
+   59 boolean_factor: . boolean_expression
+   60               | . arith_expression
+   61               | . STRING
+   62               | . SYMBOL
+   63 boolean_function: . EQ
+   64                 | . NEQ
+   65                 | . MORE
+   66                 | . LESS
+   67                 | . OR
+   68                 | . AND
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OR      shift, and go to state 78
+    AND     shift, and go to state 79
+    NOT     shift, and go to state 80
+    EQ      shift, and go to state 81
+    NEQ     shift, and go to state 82
+    MORE    shift, and go to state 83
+    LESS    shift, and go to state 84
+    TRUE    shift, and go to state 85
+    FALSE   shift, and go to state 86
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 130
+    NUMBER  shift, and go to state 98
+    STRING  shift, and go to state 131
+
+    $default  reduce using rule 54 (boolean_expression)
+
+    boolean_expression  go to state 132
+    boolean_factor      go to state 133
+    boolean_function    go to state 88
+    arith_expression    go to state 134
+    arith_term          go to state 104
+    arith_factor        go to state 105
+
+
+State 114
+
+   19 statement_group: . OCURLY statement_list CCURLY
+   80 if_statement: IF OPAREN boolean_expression CPAREN . statement_group else_clause_list
+   81             | IF OPAREN boolean_expression CPAREN . statement_group
+
+    OCURLY  shift, and go to state 28
+
+    statement_group  go to state 135
+
+
+State 115
+
+   54 boolean_expression: . %empty  [COMMA]
+   55                   | . TRUE
+   56                   | . FALSE
+   57                   | . boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   57                   | boolean_function OPAREN . boolean_factor COMMA boolean_factor CPAREN
+   58                   | . NOT OPAREN boolean_factor CPAREN
+   59 boolean_factor: . boolean_expression
+   60               | . arith_expression
+   61               | . STRING
+   62               | . SYMBOL
+   63 boolean_function: . EQ
+   64                 | . NEQ
+   65                 | . MORE
+   66                 | . LESS
+   67                 | . OR
+   68                 | . AND
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OR      shift, and go to state 78
+    AND     shift, and go to state 79
+    NOT     shift, and go to state 80
+    EQ      shift, and go to state 81
+    NEQ     shift, and go to state 82
+    MORE    shift, and go to state 83
+    LESS    shift, and go to state 84
+    TRUE    shift, and go to state 85
+    FALSE   shift, and go to state 86
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 130
+    NUMBER  shift, and go to state 98
+    STRING  shift, and go to state 131
+
+    $default  reduce using rule 54 (boolean_expression)
+
+    boolean_expression  go to state 132
+    boolean_factor      go to state 136
+    boolean_function    go to state 88
+    arith_expression    go to state 134
+    arith_term          go to state 104
+    arith_factor        go to state 105
+
+
+State 116
+
+   85 loop_statement_group: . OCURLY loop_statement_list CCURLY
+   91 while_statement: WHILE OPAREN boolean_expression CPAREN . loop_statement_group
+
+    OCURLY  shift, and go to state 137
+
+    loop_statement_group  go to state 138
+
+
+State 117
+
+   54 boolean_expression: . %empty  [SCOLON]
+   55                   | . TRUE
+   56                   | . FALSE
+   57                   | . boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   58                   | . NOT OPAREN boolean_factor CPAREN
+   63 boolean_function: . EQ
+   64                 | . NEQ
+   65                 | . MORE
+   66                 | . LESS
+   67                 | . OR
+   68                 | . AND
+   92 for_statement: FOR OPAREN var_assignment SCOLON . boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+
+    OR     shift, and go to state 78
+    AND    shift, and go to state 79
+    NOT    shift, and go to state 80
+    EQ     shift, and go to state 81
+    NEQ    shift, and go to state 82
+    MORE   shift, and go to state 83
+    LESS   shift, and go to state 84
+    TRUE   shift, and go to state 85
+    FALSE  shift, and go to state 86
+
+    $default  reduce using rule 54 (boolean_expression)
+
+    boolean_expression  go to state 139
+    boolean_function    go to state 88
+
+
+State 118
+
+   93 switch_statement: SWITCH OPAREN SYMBOL CPAREN . OCURLY case_clause_list CCURLY
+   94                 | SWITCH OPAREN SYMBOL CPAREN . OCURLY case_clause_list CCURLY else_clause
+
+    OCURLY  shift, and go to state 140
+
+
+State 119
+
+   69 arith_expression: arith_expression . PLUS arith_term
+   70                 | arith_expression . MINUS arith_term
+   77 arith_factor: OPAREN arith_expression . CPAREN
+
+    CPAREN  shift, and go to state 141
+    PLUS    shift, and go to state 124
+    MINUS   shift, and go to state 125
+
+
+State 120
+
+   76 arith_factor: MINUS arith_factor .
+
+    $default  reduce using rule 76 (arith_factor)
+
+
+State 121
+
+   46 string_expression: STRING PLUS . string_element_list
+   47 string_element_list: . string_element
+   48                    | . string_element PLUS string_element_list
+   49 string_element: . STRING
+   50               | . SYMBOL
+   51               | . NUMBER
+   52               | . TRUE
+   53               | . FALSE
+
+    TRUE    shift, and go to state 142
+    FALSE   shift, and go to state 143
+    SYMBOL  shift, and go to state 144
+    NUMBER  shift, and go to state 145
+    STRING  shift, and go to state 146
+
+    string_element_list  go to state 147
+    string_element       go to state 148
+
+
+State 122
+
+   33 function_call_parameters: OPAREN fc_parameter_list CPAREN . OPAREN fc_parameter_list CPAREN
+
+    OPAREN  shift, and go to state 149
+
+
+State 123
+
+   34 fc_parameter_list: . %empty  [CPAREN]
+   35                  | . fc_parameter
+   36                  | . fc_parameter COMMA fc_parameter_list
+   36                  | fc_parameter COMMA . fc_parameter_list
+   37 fc_parameter: . SYMBOL
+   38             | . arith_expression
+   39             | . string_expression
+   40             | . TRUE
+   41             | . FALSE
+   45 string_expression: . STRING
+   46                  | . STRING PLUS string_element_list
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    TRUE    shift, and go to state 93
+    FALSE   shift, and go to state 94
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 97
+    NUMBER  shift, and go to state 98
+    STRING  shift, and go to state 99
+
+    $default  reduce using rule 34 (fc_parameter_list)
+
+    fc_parameter_list  go to state 150
+    fc_parameter       go to state 101
+    string_expression  go to state 102
+    arith_expression   go to state 103
+    arith_term         go to state 104
+    arith_factor       go to state 105
+
+
+State 124
+
+   69 arith_expression: arith_expression PLUS . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+
+    arith_term    go to state 151
+    arith_factor  go to state 105
+
+
+State 125
+
+   70 arith_expression: arith_expression MINUS . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+
+    arith_term    go to state 152
+    arith_factor  go to state 105
+
+
+State 126
+
+   72 arith_term: arith_term MULT . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+
+    arith_factor  go to state 153
+
+
+State 127
+
+   73 arith_term: arith_term DIV . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+
+    arith_factor  go to state 154
+
+
+State 128
+
+   74 arith_term: arith_term MODULO . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+
+    arith_factor  go to state 155
+
+
+State 129
+
+   31 var_assignment: SYMBOL ASSIGN expression SCOLON .
+
+    $default  reduce using rule 31 (var_assignment)
+
+
+State 130
+
+   62 boolean_factor: SYMBOL .  [CPAREN, COMMA]
+   79 arith_factor: SYMBOL .  [CPAREN, COMMA, PLUS, MINUS, MULT, DIV, MODULO]
+
+    CPAREN    reduce using rule 62 (boolean_factor)
+    CPAREN    [reduce using rule 79 (arith_factor)]
+    COMMA     reduce using rule 62 (boolean_factor)
+    COMMA     [reduce using rule 79 (arith_factor)]
+    $default  reduce using rule 79 (arith_factor)
+
+
+State 131
+
+   61 boolean_factor: STRING .
+
+    $default  reduce using rule 61 (boolean_factor)
+
+
+State 132
+
+   59 boolean_factor: boolean_expression .
+
+    $default  reduce using rule 59 (boolean_factor)
+
+
+State 133
+
+   58 boolean_expression: NOT OPAREN boolean_factor . CPAREN
+
+    CPAREN  shift, and go to state 156
+
+
+State 134
+
+   60 boolean_factor: arith_expression .  [CPAREN, COMMA]
+   69 arith_expression: arith_expression . PLUS arith_term
+   70                 | arith_expression . MINUS arith_term
+
+    PLUS   shift, and go to state 124
+    MINUS  shift, and go to state 125
+
+    $default  reduce using rule 60 (boolean_factor)
+
+
+State 135
+
+   80 if_statement: IF OPAREN boolean_expression CPAREN statement_group . else_clause_list
+   81             | IF OPAREN boolean_expression CPAREN statement_group .  [NUM, STRG, BOOL, RETURN, BREAK, CONT, IF, WHILE, FOR, SWITCH, OCURLY, CCURLY, SYMBOL]
+   82 else_clause_list: . else_clause
+   83                 | . else_clause else_clause_list
+   84 else_clause: . ELSE OPAREN boolean_expression CPAREN statement_group
+
+    ELSE  shift, and go to state 157
+
+    $default  reduce using rule 81 (if_statement)
+
+    else_clause_list  go to state 158
+    else_clause       go to state 159
+
+
+State 136
+
+   57 boolean_expression: boolean_function OPAREN boolean_factor . COMMA boolean_factor CPAREN
+
+    COMMA  shift, and go to state 160
+
+
+State 137
+
+    7 var_definition: . NUM COLON SYMBOL ASSIGN NUMBER SCOLON
+    8               | . STRG COLON SYMBOL ASSIGN STRING SCOLON
+    9               | . BOOL COLON SYMBOL ASSIGN TRUE SCOLON
+   10               | . BOOL COLON SYMBOL ASSIGN FALSE SCOLON
+   19 statement_group: . OCURLY statement_list CCURLY
+   22 statement: . var_definition
+   23          | . var_assignment
+   24          | . function_call
+   25          | . if_statement
+   26          | . while_statement
+   27          | . for_statement
+   28          | . switch_statement
+   29          | . RETURN SCOLON
+   30          | . statement_group
+   31 var_assignment: . SYMBOL ASSIGN expression SCOLON
+   32 function_call: . SYMBOL function_call_parameters SCOLON
+   80 if_statement: . IF OPAREN boolean_expression CPAREN statement_group else_clause_list
+   81             | . IF OPAREN boolean_expression CPAREN statement_group
+   85 loop_statement_group: OCURLY . loop_statement_list CCURLY
+   86 loop_statement_list: . loop_statement
+   87                    | . loop_statement loop_statement_list
+   88 loop_statement: . statement
+   89               | . CONT SCOLON
+   90               | . BREAK SCOLON
+   91 while_statement: . WHILE OPAREN boolean_expression CPAREN loop_statement_group
+   92 for_statement: . FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+   93 switch_statement: . SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY
+   94                 | . SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause
+
+    NUM     shift, and go to state 1
+    STRG    shift, and go to state 2
+    BOOL    shift, and go to state 3
+    RETURN  shift, and go to state 38
+    BREAK   shift, and go to state 161
+    CONT    shift, and go to state 162
+    IF      shift, and go to state 39
+    WHILE   shift, and go to state 40
+    FOR     shift, and go to state 41
+    SWITCH  shift, and go to state 42
+    OCURLY  shift, and go to state 28
+    SYMBOL  shift, and go to state 43
+
+    var_definition       go to state 44
+    statement_group      go to state 45
+    statement            go to state 163
+    var_assignment       go to state 48
+    function_call        go to state 49
+    if_statement         go to state 50
+    loop_statement_list  go to state 164
+    loop_statement       go to state 165
+    while_statement      go to state 51
+    for_statement        go to state 52
+    switch_statement     go to state 53
+
+
+State 138
+
+   91 while_statement: WHILE OPAREN boolean_expression CPAREN loop_statement_group .
+
+    $default  reduce using rule 91 (while_statement)
+
+
+State 139
+
+   92 for_statement: FOR OPAREN var_assignment SCOLON boolean_expression . SCOLON arith_expression CPAREN loop_statement_group
+
+    SCOLON  shift, and go to state 166
+
+
+State 140
+
+   93 switch_statement: SWITCH OPAREN SYMBOL CPAREN OCURLY . case_clause_list CCURLY
+   94                 | SWITCH OPAREN SYMBOL CPAREN OCURLY . case_clause_list CCURLY else_clause
+   95 case_clause_list: . case_clause
+   96                 | . case_clause case_clause_list
+   97 case_clause: . CASE OPAREN SYMBOL CPAREN statement_group
+   98            | . CASE OPAREN NUMBER CPAREN statement_group
+   99            | . CASE OPAREN STRING CPAREN statement_group
+  100            | . CASE OPAREN TRUE CPAREN statement_group
+  101            | . CASE OPAREN FALSE CPAREN statement_group
+
+    CASE  shift, and go to state 167
+
+    case_clause_list  go to state 168
+    case_clause       go to state 169
+
+
+State 141
+
+   77 arith_factor: OPAREN arith_expression CPAREN .
+
+    $default  reduce using rule 77 (arith_factor)
+
+
+State 142
+
+   52 string_element: TRUE .
+
+    $default  reduce using rule 52 (string_element)
+
+
+State 143
+
+   53 string_element: FALSE .
+
+    $default  reduce using rule 53 (string_element)
+
+
+State 144
+
+   50 string_element: SYMBOL .
+
+    $default  reduce using rule 50 (string_element)
+
+
+State 145
+
+   51 string_element: NUMBER .
+
+    $default  reduce using rule 51 (string_element)
+
+
+State 146
+
+   49 string_element: STRING .
+
+    $default  reduce using rule 49 (string_element)
+
+
+State 147
+
+   46 string_expression: STRING PLUS string_element_list .
+
+    $default  reduce using rule 46 (string_expression)
+
+
+State 148
+
+   47 string_element_list: string_element .  [CPAREN, COMMA, SCOLON]
+   48                    | string_element . PLUS string_element_list
+
+    PLUS  shift, and go to state 170
+
+    $default  reduce using rule 47 (string_element_list)
+
+
+State 149
+
+   33 function_call_parameters: OPAREN fc_parameter_list CPAREN OPAREN . fc_parameter_list CPAREN
+   34 fc_parameter_list: . %empty  [CPAREN]
+   35                  | . fc_parameter
+   36                  | . fc_parameter COMMA fc_parameter_list
+   37 fc_parameter: . SYMBOL
+   38             | . arith_expression
+   39             | . string_expression
+   40             | . TRUE
+   41             | . FALSE
+   45 string_expression: . STRING
+   46                  | . STRING PLUS string_element_list
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    TRUE    shift, and go to state 93
+    FALSE   shift, and go to state 94
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 97
+    NUMBER  shift, and go to state 98
+    STRING  shift, and go to state 99
+
+    $default  reduce using rule 34 (fc_parameter_list)
+
+    fc_parameter_list  go to state 171
+    fc_parameter       go to state 101
+    string_expression  go to state 102
+    arith_expression   go to state 103
+    arith_term         go to state 104
+    arith_factor       go to state 105
+
+
+State 150
+
+   36 fc_parameter_list: fc_parameter COMMA fc_parameter_list .
+
+    $default  reduce using rule 36 (fc_parameter_list)
+
+
+State 151
+
+   69 arith_expression: arith_expression PLUS arith_term .  [CPAREN, COMMA, SCOLON, PLUS, MINUS]
+   72 arith_term: arith_term . MULT arith_factor
+   73           | arith_term . DIV arith_factor
+   74           | arith_term . MODULO arith_factor
+
+    MULT    shift, and go to state 126
+    DIV     shift, and go to state 127
+    MODULO  shift, and go to state 128
+
+    $default  reduce using rule 69 (arith_expression)
+
+
+State 152
+
+   70 arith_expression: arith_expression MINUS arith_term .  [CPAREN, COMMA, SCOLON, PLUS, MINUS]
+   72 arith_term: arith_term . MULT arith_factor
+   73           | arith_term . DIV arith_factor
+   74           | arith_term . MODULO arith_factor
+
+    MULT    shift, and go to state 126
+    DIV     shift, and go to state 127
+    MODULO  shift, and go to state 128
+
+    $default  reduce using rule 70 (arith_expression)
+
+
+State 153
+
+   72 arith_term: arith_term MULT arith_factor .
+
+    $default  reduce using rule 72 (arith_term)
+
+
+State 154
+
+   73 arith_term: arith_term DIV arith_factor .
+
+    $default  reduce using rule 73 (arith_term)
+
+
+State 155
+
+   74 arith_term: arith_term MODULO arith_factor .
+
+    $default  reduce using rule 74 (arith_term)
+
+
+State 156
+
+   58 boolean_expression: NOT OPAREN boolean_factor CPAREN .
+
+    $default  reduce using rule 58 (boolean_expression)
+
+
+State 157
+
+   84 else_clause: ELSE . OPAREN boolean_expression CPAREN statement_group
+
+    OPAREN  shift, and go to state 172
+
+
+State 158
+
+   80 if_statement: IF OPAREN boolean_expression CPAREN statement_group else_clause_list .
+
+    $default  reduce using rule 80 (if_statement)
+
+
+State 159
+
+   82 else_clause_list: . else_clause
+   82                 | else_clause .  [NUM, STRG, BOOL, RETURN, BREAK, CONT, IF, WHILE, FOR, SWITCH, OCURLY, CCURLY, SYMBOL]
+   83                 | . else_clause else_clause_list
+   83                 | else_clause . else_clause_list
+   84 else_clause: . ELSE OPAREN boolean_expression CPAREN statement_group
+
+    ELSE  shift, and go to state 157
+
+    $default  reduce using rule 82 (else_clause_list)
+
+    else_clause_list  go to state 173
+    else_clause       go to state 159
+
+
+State 160
+
+   54 boolean_expression: . %empty  [CPAREN]
+   55                   | . TRUE
+   56                   | . FALSE
+   57                   | . boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   57                   | boolean_function OPAREN boolean_factor COMMA . boolean_factor CPAREN
+   58                   | . NOT OPAREN boolean_factor CPAREN
+   59 boolean_factor: . boolean_expression
+   60               | . arith_expression
+   61               | . STRING
+   62               | . SYMBOL
+   63 boolean_function: . EQ
+   64                 | . NEQ
+   65                 | . MORE
+   66                 | . LESS
+   67                 | . OR
+   68                 | . AND
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+
+    OR      shift, and go to state 78
+    AND     shift, and go to state 79
+    NOT     shift, and go to state 80
+    EQ      shift, and go to state 81
+    NEQ     shift, and go to state 82
+    MORE    shift, and go to state 83
+    LESS    shift, and go to state 84
+    TRUE    shift, and go to state 85
+    FALSE   shift, and go to state 86
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 130
+    NUMBER  shift, and go to state 98
+    STRING  shift, and go to state 131
+
+    $default  reduce using rule 54 (boolean_expression)
+
+    boolean_expression  go to state 132
+    boolean_factor      go to state 174
+    boolean_function    go to state 88
+    arith_expression    go to state 134
+    arith_term          go to state 104
+    arith_factor        go to state 105
+
+
+State 161
+
+   90 loop_statement: BREAK . SCOLON
+
+    SCOLON  shift, and go to state 175
+
+
+State 162
+
+   89 loop_statement: CONT . SCOLON
+
+    SCOLON  shift, and go to state 176
+
+
+State 163
+
+   88 loop_statement: statement .
+
+    $default  reduce using rule 88 (loop_statement)
+
+
+State 164
+
+   85 loop_statement_group: OCURLY loop_statement_list . CCURLY
+
+    CCURLY  shift, and go to state 177
+
+
+State 165
+
+    7 var_definition: . NUM COLON SYMBOL ASSIGN NUMBER SCOLON
+    8               | . STRG COLON SYMBOL ASSIGN STRING SCOLON
+    9               | . BOOL COLON SYMBOL ASSIGN TRUE SCOLON
+   10               | . BOOL COLON SYMBOL ASSIGN FALSE SCOLON
+   19 statement_group: . OCURLY statement_list CCURLY
+   22 statement: . var_definition
+   23          | . var_assignment
+   24          | . function_call
+   25          | . if_statement
+   26          | . while_statement
+   27          | . for_statement
+   28          | . switch_statement
+   29          | . RETURN SCOLON
+   30          | . statement_group
+   31 var_assignment: . SYMBOL ASSIGN expression SCOLON
+   32 function_call: . SYMBOL function_call_parameters SCOLON
+   80 if_statement: . IF OPAREN boolean_expression CPAREN statement_group else_clause_list
+   81             | . IF OPAREN boolean_expression CPAREN statement_group
+   86 loop_statement_list: . loop_statement
+   86                    | loop_statement .  [CCURLY]
+   87                    | . loop_statement loop_statement_list
+   87                    | loop_statement . loop_statement_list
+   88 loop_statement: . statement
+   89               | . CONT SCOLON
+   90               | . BREAK SCOLON
+   91 while_statement: . WHILE OPAREN boolean_expression CPAREN loop_statement_group
+   92 for_statement: . FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+   93 switch_statement: . SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY
+   94                 | . SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause
+
+    NUM     shift, and go to state 1
+    STRG    shift, and go to state 2
+    BOOL    shift, and go to state 3
+    RETURN  shift, and go to state 38
+    BREAK   shift, and go to state 161
+    CONT    shift, and go to state 162
+    IF      shift, and go to state 39
+    WHILE   shift, and go to state 40
+    FOR     shift, and go to state 41
+    SWITCH  shift, and go to state 42
+    OCURLY  shift, and go to state 28
+    SYMBOL  shift, and go to state 43
+
+    $default  reduce using rule 86 (loop_statement_list)
+
+    var_definition       go to state 44
+    statement_group      go to state 45
+    statement            go to state 163
+    var_assignment       go to state 48
+    function_call        go to state 49
+    if_statement         go to state 50
+    loop_statement_list  go to state 178
+    loop_statement       go to state 165
+    while_statement      go to state 51
+    for_statement        go to state 52
+    switch_statement     go to state 53
+
+
+State 166
+
+   69 arith_expression: . arith_expression PLUS arith_term
+   70                 | . arith_expression MINUS arith_term
+   71                 | . arith_term
+   72 arith_term: . arith_term MULT arith_factor
+   73           | . arith_term DIV arith_factor
+   74           | . arith_term MODULO arith_factor
+   75           | . arith_factor
+   76 arith_factor: . MINUS arith_factor
+   77             | . OPAREN arith_expression CPAREN
+   78             | . NUMBER
+   79             | . SYMBOL
+   92 for_statement: FOR OPAREN var_assignment SCOLON boolean_expression SCOLON . arith_expression CPAREN loop_statement_group
+
+    OPAREN  shift, and go to state 95
+    MINUS   shift, and go to state 96
+    SYMBOL  shift, and go to state 106
+    NUMBER  shift, and go to state 98
+
+    arith_expression  go to state 179
+    arith_term        go to state 104
+    arith_factor      go to state 105
+
+
+State 167
+
+   97 case_clause: CASE . OPAREN SYMBOL CPAREN statement_group
+   98            | CASE . OPAREN NUMBER CPAREN statement_group
+   99            | CASE . OPAREN STRING CPAREN statement_group
+  100            | CASE . OPAREN TRUE CPAREN statement_group
+  101            | CASE . OPAREN FALSE CPAREN statement_group
+
+    OPAREN  shift, and go to state 180
+
+
+State 168
+
+   93 switch_statement: SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list . CCURLY
+   94                 | SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list . CCURLY else_clause
+
+    CCURLY  shift, and go to state 181
+
+
+State 169
+
+   95 case_clause_list: . case_clause
+   95                 | case_clause .  [CCURLY]
+   96                 | . case_clause case_clause_list
+   96                 | case_clause . case_clause_list
+   97 case_clause: . CASE OPAREN SYMBOL CPAREN statement_group
+   98            | . CASE OPAREN NUMBER CPAREN statement_group
+   99            | . CASE OPAREN STRING CPAREN statement_group
+  100            | . CASE OPAREN TRUE CPAREN statement_group
+  101            | . CASE OPAREN FALSE CPAREN statement_group
+
+    CASE  shift, and go to state 167
+
+    $default  reduce using rule 95 (case_clause_list)
+
+    case_clause_list  go to state 182
+    case_clause       go to state 169
+
+
+State 170
+
+   47 string_element_list: . string_element
+   48                    | . string_element PLUS string_element_list
+   48                    | string_element PLUS . string_element_list
+   49 string_element: . STRING
+   50               | . SYMBOL
+   51               | . NUMBER
+   52               | . TRUE
+   53               | . FALSE
+
+    TRUE    shift, and go to state 142
+    FALSE   shift, and go to state 143
+    SYMBOL  shift, and go to state 144
+    NUMBER  shift, and go to state 145
+    STRING  shift, and go to state 146
+
+    string_element_list  go to state 183
+    string_element       go to state 148
+
+
+State 171
+
+   33 function_call_parameters: OPAREN fc_parameter_list CPAREN OPAREN fc_parameter_list . CPAREN
+
+    CPAREN  shift, and go to state 184
+
+
+State 172
+
+   54 boolean_expression: . %empty  [CPAREN]
+   55                   | . TRUE
+   56                   | . FALSE
+   57                   | . boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+   58                   | . NOT OPAREN boolean_factor CPAREN
+   63 boolean_function: . EQ
+   64                 | . NEQ
+   65                 | . MORE
+   66                 | . LESS
+   67                 | . OR
+   68                 | . AND
+   84 else_clause: ELSE OPAREN . boolean_expression CPAREN statement_group
+
+    OR     shift, and go to state 78
+    AND    shift, and go to state 79
+    NOT    shift, and go to state 80
+    EQ     shift, and go to state 81
+    NEQ    shift, and go to state 82
+    MORE   shift, and go to state 83
+    LESS   shift, and go to state 84
+    TRUE   shift, and go to state 85
+    FALSE  shift, and go to state 86
+
+    $default  reduce using rule 54 (boolean_expression)
+
+    boolean_expression  go to state 185
+    boolean_function    go to state 88
+
+
+State 173
+
+   83 else_clause_list: else_clause else_clause_list .
+
+    $default  reduce using rule 83 (else_clause_list)
+
+
+State 174
+
+   57 boolean_expression: boolean_function OPAREN boolean_factor COMMA boolean_factor . CPAREN
+
+    CPAREN  shift, and go to state 186
+
+
+State 175
+
+   90 loop_statement: BREAK SCOLON .
+
+    $default  reduce using rule 90 (loop_statement)
+
+
+State 176
+
+   89 loop_statement: CONT SCOLON .
+
+    $default  reduce using rule 89 (loop_statement)
+
+
+State 177
+
+   85 loop_statement_group: OCURLY loop_statement_list CCURLY .
+
+    $default  reduce using rule 85 (loop_statement_group)
+
+
+State 178
+
+   87 loop_statement_list: loop_statement loop_statement_list .
+
+    $default  reduce using rule 87 (loop_statement_list)
+
+
+State 179
+
+   69 arith_expression: arith_expression . PLUS arith_term
+   70                 | arith_expression . MINUS arith_term
+   92 for_statement: FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression . CPAREN loop_statement_group
+
+    CPAREN  shift, and go to state 187
+    PLUS    shift, and go to state 124
+    MINUS   shift, and go to state 125
+
+
+State 180
+
+   97 case_clause: CASE OPAREN . SYMBOL CPAREN statement_group
+   98            | CASE OPAREN . NUMBER CPAREN statement_group
+   99            | CASE OPAREN . STRING CPAREN statement_group
+  100            | CASE OPAREN . TRUE CPAREN statement_group
+  101            | CASE OPAREN . FALSE CPAREN statement_group
+
+    TRUE    shift, and go to state 188
+    FALSE   shift, and go to state 189
+    SYMBOL  shift, and go to state 190
+    NUMBER  shift, and go to state 191
+    STRING  shift, and go to state 192
+
+
+State 181
+
+   84 else_clause: . ELSE OPAREN boolean_expression CPAREN statement_group
+   93 switch_statement: SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY .  [NUM, STRG, BOOL, RETURN, BREAK, CONT, IF, WHILE, FOR, SWITCH, OCURLY, CCURLY, SYMBOL]
+   94                 | SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY . else_clause
+
+    ELSE  shift, and go to state 157
+
+    $default  reduce using rule 93 (switch_statement)
+
+    else_clause  go to state 193
+
+
+State 182
+
+   96 case_clause_list: case_clause case_clause_list .
+
+    $default  reduce using rule 96 (case_clause_list)
+
+
+State 183
+
+   48 string_element_list: string_element PLUS string_element_list .
+
+    $default  reduce using rule 48 (string_element_list)
+
+
+State 184
+
+   33 function_call_parameters: OPAREN fc_parameter_list CPAREN OPAREN fc_parameter_list CPAREN .
+
+    $default  reduce using rule 33 (function_call_parameters)
+
+
+State 185
+
+   84 else_clause: ELSE OPAREN boolean_expression . CPAREN statement_group
+
+    CPAREN  shift, and go to state 194
+
+
+State 186
+
+   57 boolean_expression: boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN .
+
+    $default  reduce using rule 57 (boolean_expression)
+
+
+State 187
+
+   85 loop_statement_group: . OCURLY loop_statement_list CCURLY
+   92 for_statement: FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN . loop_statement_group
+
+    OCURLY  shift, and go to state 137
+
+    loop_statement_group  go to state 195
+
+
+State 188
+
+  100 case_clause: CASE OPAREN TRUE . CPAREN statement_group
+
+    CPAREN  shift, and go to state 196
+
+
+State 189
+
+  101 case_clause: CASE OPAREN FALSE . CPAREN statement_group
+
+    CPAREN  shift, and go to state 197
+
+
+State 190
+
+   97 case_clause: CASE OPAREN SYMBOL . CPAREN statement_group
+
+    CPAREN  shift, and go to state 198
+
+
+State 191
+
+   98 case_clause: CASE OPAREN NUMBER . CPAREN statement_group
+
+    CPAREN  shift, and go to state 199
+
+
+State 192
+
+   99 case_clause: CASE OPAREN STRING . CPAREN statement_group
+
+    CPAREN  shift, and go to state 200
+
+
+State 193
+
+   94 switch_statement: SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause .
+
+    $default  reduce using rule 94 (switch_statement)
+
+
+State 194
+
+   19 statement_group: . OCURLY statement_list CCURLY
+   84 else_clause: ELSE OPAREN boolean_expression CPAREN . statement_group
+
+    OCURLY  shift, and go to state 28
+
+    statement_group  go to state 201
+
+
+State 195
+
+   92 for_statement: FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group .
+
+    $default  reduce using rule 92 (for_statement)
+
+
+State 196
+
+   19 statement_group: . OCURLY statement_list CCURLY
+  100 case_clause: CASE OPAREN TRUE CPAREN . statement_group
+
+    OCURLY  shift, and go to state 28
+
+    statement_group  go to state 202
+
+
+State 197
+
+   19 statement_group: . OCURLY statement_list CCURLY
+  101 case_clause: CASE OPAREN FALSE CPAREN . statement_group
+
+    OCURLY  shift, and go to state 28
+
+    statement_group  go to state 203
+
+
+State 198
+
+   19 statement_group: . OCURLY statement_list CCURLY
+   97 case_clause: CASE OPAREN SYMBOL CPAREN . statement_group
+
+    OCURLY  shift, and go to state 28
+
+    statement_group  go to state 204
+
+
+State 199
+
+   19 statement_group: . OCURLY statement_list CCURLY
+   98 case_clause: CASE OPAREN NUMBER CPAREN . statement_group
+
+    OCURLY  shift, and go to state 28
+
+    statement_group  go to state 205
+
+
+State 200
+
+   19 statement_group: . OCURLY statement_list CCURLY
+   99 case_clause: CASE OPAREN STRING CPAREN . statement_group
+
+    OCURLY  shift, and go to state 28
+
+    statement_group  go to state 206
+
+
+State 201
+
+   84 else_clause: ELSE OPAREN boolean_expression CPAREN statement_group .
+
+    $default  reduce using rule 84 (else_clause)
+
+
+State 202
+
+  100 case_clause: CASE OPAREN TRUE CPAREN statement_group .
+
+    $default  reduce using rule 100 (case_clause)
+
+
+State 203
+
+  101 case_clause: CASE OPAREN FALSE CPAREN statement_group .
+
+    $default  reduce using rule 101 (case_clause)
+
+
+State 204
+
+   97 case_clause: CASE OPAREN SYMBOL CPAREN statement_group .
+
+    $default  reduce using rule 97 (case_clause)
+
+
+State 205
+
+   98 case_clause: CASE OPAREN NUMBER CPAREN statement_group .
+
+    $default  reduce using rule 98 (case_clause)
+
+
+State 206
+
+   99 case_clause: CASE OPAREN STRING CPAREN statement_group .
+
+    $default  reduce using rule 99 (case_clause)

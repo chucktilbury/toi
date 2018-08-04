@@ -1,0 +1,36 @@
+
+# this is a comment
+234,234
+num strg # comment# bool
+wall898(number:123, bool:qew)
+
+{0x1234, # anotrher comment # 0xabcd0} # 1239087 comment
+
+123.345
+
+(,):;{}
+
+num:symbul = 1234;
+function_@$defineition(num:asdf, strg:qwe)(num:retv) {
+    if(3 and(1)) {
+        call_something(ased, er);
+    }
+    else(eq(123, 123)) { 
+        print("junk");
+    }
+}
+
+"this is a cr->\nand then some more"
+'this is a string with a cr->\nliteral'
+
+"this is a string 
+that has some 
+linefeeds in it"
+
++-=/
+
+TRUE, FALSE, YES, NO
+
+import "something"
+
+(123+23-123/2)

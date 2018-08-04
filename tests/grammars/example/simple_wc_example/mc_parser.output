@@ -1,0 +1,146 @@
+Grammar
+
+    0 $accept: list_option "end of file"
+
+    1 list_option: "end of file"
+    2            | list "end of file"
+
+    3 list: item
+    4     | list item
+
+    5 item: UPPER
+    6     | LOWER
+    7     | WORD
+    8     | NEWLINE
+    9     | CHAR
+
+
+Terminals, with rules where they appear
+
+"end of file" (0) 0 1 2
+error (256)
+UPPER (258) 5
+LOWER (259) 6
+WORD (260) 7
+NEWLINE (261) 8
+CHAR (262) 9
+
+
+Nonterminals, with rules where they appear
+
+$accept (8)
+    on left: 0
+list_option (9)
+    on left: 1 2, on right: 0
+list (10)
+    on left: 3 4, on right: 2 4
+item (11)
+    on left: 5 6 7 8 9, on right: 3 4
+
+
+State 0
+
+    0 $accept: . list_option "end of file"
+
+    "end of file"  shift, and go to state 1
+    UPPER          shift, and go to state 2
+    LOWER          shift, and go to state 3
+    WORD           shift, and go to state 4
+    NEWLINE        shift, and go to state 5
+    CHAR           shift, and go to state 6
+
+    list_option  go to state 7
+    list         go to state 8
+    item         go to state 9
+
+
+State 1
+
+    1 list_option: "end of file" .
+
+    $default  reduce using rule 1 (list_option)
+
+
+State 2
+
+    5 item: UPPER .
+
+    $default  reduce using rule 5 (item)
+
+
+State 3
+
+    6 item: LOWER .
+
+    $default  reduce using rule 6 (item)
+
+
+State 4
+
+    7 item: WORD .
+
+    $default  reduce using rule 7 (item)
+
+
+State 5
+
+    8 item: NEWLINE .
+
+    $default  reduce using rule 8 (item)
+
+
+State 6
+
+    9 item: CHAR .
+
+    $default  reduce using rule 9 (item)
+
+
+State 7
+
+    0 $accept: list_option . "end of file"
+
+    "end of file"  shift, and go to state 10
+
+
+State 8
+
+    2 list_option: list . "end of file"
+    4 list: list . item
+
+    "end of file"  shift, and go to state 11
+    UPPER          shift, and go to state 2
+    LOWER          shift, and go to state 3
+    WORD           shift, and go to state 4
+    NEWLINE        shift, and go to state 5
+    CHAR           shift, and go to state 6
+
+    item  go to state 12
+
+
+State 9
+
+    3 list: item .
+
+    $default  reduce using rule 3 (list)
+
+
+State 10
+
+    0 $accept: list_option "end of file" .
+
+    $default  accept
+
+
+State 11
+
+    2 list_option: list "end of file" .
+
+    $default  reduce using rule 2 (list_option)
+
+
+State 12
+
+    4 list: list item .
+
+    $default  reduce using rule 4 (list)

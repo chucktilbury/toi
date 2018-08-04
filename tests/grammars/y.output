@@ -1,0 +1,2286 @@
+   0  $accept : module $end
+
+   1  module : module_element
+   2         | module module_element
+
+   3  module_element : import_directive
+   4                 | var_definition
+   5                 | function_definition
+
+   6  import_directive : IMPORT STRING SCOLON
+
+   7  var_definition : NUM COLON SYMBOL ASSIGN NUMBER SCOLON
+   8                 | STRG COLON SYMBOL ASSIGN STRING SCOLON
+   9                 | BOOL COLON SYMBOL ASSIGN TRUE SCOLON
+  10                 | BOOL COLON SYMBOL ASSIGN FALSE SCOLON
+
+  11  function_definition : SYMBOL function_def_parameters statement_group
+
+  12  function_def_parameters : OPAREN fd_parameter_list CPAREN OPAREN fd_parameter_list CPAREN
+
+  13  fd_parameter :
+  14               | NUM COLON SYMBOL
+  15               | STRG COLON SYMBOL
+  16               | BOOL COLON SYMBOL
+
+  17  fd_parameter_list : fd_parameter
+  18                    | fd_parameter COMMA fd_parameter_list
+
+  19  statement_group : OCURLY statement_list CCURLY
+
+  20  statement_list : statement
+  21                 | statement statement_list
+
+  22  statement : var_definition
+  23            | var_assignment
+  24            | function_call
+  25            | if_statement
+  26            | while_statement
+  27            | for_statement
+  28            | switch_statement
+  29            | RETURN SCOLON
+  30            | statement_group
+
+  31  var_assignment : SYMBOL ASSIGN expression SCOLON
+
+  32  function_call : SYMBOL function_call_parameters SCOLON
+
+  33  function_call_parameters : OPAREN fc_parameter_list CPAREN OPAREN fc_parameter_list CPAREN
+
+  34  fc_parameter_list :
+  35                    | fc_parameter
+  36                    | fc_parameter COMMA fc_parameter_list
+
+  37  fc_parameter : SYMBOL
+  38               | TRUE
+  39               | FALSE
+  40               | arith_expression
+  41               | string_expression
+  42               | boolean_expression
+
+  43  expression : boolean_expression
+  44             | arith_expression
+  45             | string_expression
+
+  46  string_expression : STRING
+  47                    | STRING PLUS string_element_list
+
+  48  string_element_list : string_element
+  49                      | string_element PLUS string_element_list
+
+  50  string_element : STRING
+  51                 | SYMBOL
+  52                 | NUMBER
+  53                 | TRUE
+  54                 | FALSE
+  55                 | boolean_expression
+  56                 | arith_expression
+
+  57  boolean_expression :
+  58                     | TRUE
+  59                     | FALSE
+  60                     | boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN
+  61                     | NOT OPAREN boolean_factor CPAREN
+
+  62  boolean_factor : STRING
+  63                 | SYMBOL
+  64                 | boolean_expression
+
+  65  boolean_function : EQ
+  66                   | NEQ
+  67                   | MORE
+  68                   | LESS
+  69                   | OR
+  70                   | AND
+
+  71  arith_expression : arith_expression PLUS arith_term
+  72                   | arith_expression MINUS arith_term
+  73                   | arith_term
+
+  74  arith_term : arith_term MULT arith_factor
+  75             | arith_term DIV arith_factor
+  76             | arith_term MODULO arith_factor
+  77             | arith_factor
+
+  78  arith_factor : MINUS arith_factor
+  79               | OPAREN arith_expression CPAREN
+  80               | NUMBER
+  81               | SYMBOL
+
+  82  if_statement : IF OPAREN boolean_expression CPAREN statement_group else_clause_list
+  83               | IF OPAREN boolean_expression CPAREN statement_group
+
+  84  else_clause_list : else_clause
+  85                   | else_clause else_clause_list
+
+  86  else_clause : ELSE OPAREN boolean_expression CPAREN statement_group
+
+  87  loop_statement_group : OCURLY loop_statement_list CCURLY
+
+  88  loop_statement_list : loop_statement
+  89                      | loop_statement loop_statement_list
+
+  90  loop_statement : statement
+  91                 | CONT SCOLON
+  92                 | BREAK SCOLON
+
+  93  while_statement : WHILE OPAREN boolean_expression CPAREN loop_statement_group
+
+  94  for_statement : FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group
+
+  95  switch_statement : SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY
+  96                   | SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause
+
+  97  case_clause_list : case_clause
+  98                   | case_clause case_clause_list
+
+  99  case_clause : CASE OPAREN SYMBOL CPAREN statement_group
+ 100              | CASE OPAREN NUMBER CPAREN statement_group
+ 101              | CASE OPAREN STRING CPAREN statement_group
+ 102              | CASE OPAREN TRUE CPAREN statement_group
+ 103              | CASE OPAREN FALSE CPAREN statement_group
+
+state 0
+	$accept : . module $end  (0)
+
+	NUM  shift 1
+	STRG  shift 2
+	BOOL  shift 3
+	IMPORT  shift 4
+	SYMBOL  shift 5
+	.  error
+
+	module  goto 6
+	module_element  goto 7
+	import_directive  goto 8
+	var_definition  goto 9
+	function_definition  goto 10
+
+
+state 1
+	var_definition : NUM . COLON SYMBOL ASSIGN NUMBER SCOLON  (7)
+
+	COLON  shift 11
+	.  error
+
+
+state 2
+	var_definition : STRG . COLON SYMBOL ASSIGN STRING SCOLON  (8)
+
+	COLON  shift 12
+	.  error
+
+
+state 3
+	var_definition : BOOL . COLON SYMBOL ASSIGN TRUE SCOLON  (9)
+	var_definition : BOOL . COLON SYMBOL ASSIGN FALSE SCOLON  (10)
+
+	COLON  shift 13
+	.  error
+
+
+state 4
+	import_directive : IMPORT . STRING SCOLON  (6)
+
+	STRING  shift 14
+	.  error
+
+
+state 5
+	function_definition : SYMBOL . function_def_parameters statement_group  (11)
+
+	OPAREN  shift 15
+	.  error
+
+	function_def_parameters  goto 16
+
+
+state 6
+	$accept : module . $end  (0)
+	module : module . module_element  (2)
+
+	$end  accept
+	NUM  shift 1
+	STRG  shift 2
+	BOOL  shift 3
+	IMPORT  shift 4
+	SYMBOL  shift 5
+	.  error
+
+	module_element  goto 17
+	import_directive  goto 8
+	var_definition  goto 9
+	function_definition  goto 10
+
+
+state 7
+	module : module_element .  (1)
+
+	.  reduce 1
+
+
+state 8
+	module_element : import_directive .  (3)
+
+	.  reduce 3
+
+
+state 9
+	module_element : var_definition .  (4)
+
+	.  reduce 4
+
+
+state 10
+	module_element : function_definition .  (5)
+
+	.  reduce 5
+
+
+state 11
+	var_definition : NUM COLON . SYMBOL ASSIGN NUMBER SCOLON  (7)
+
+	SYMBOL  shift 18
+	.  error
+
+
+state 12
+	var_definition : STRG COLON . SYMBOL ASSIGN STRING SCOLON  (8)
+
+	SYMBOL  shift 19
+	.  error
+
+
+state 13
+	var_definition : BOOL COLON . SYMBOL ASSIGN TRUE SCOLON  (9)
+	var_definition : BOOL COLON . SYMBOL ASSIGN FALSE SCOLON  (10)
+
+	SYMBOL  shift 20
+	.  error
+
+
+state 14
+	import_directive : IMPORT STRING . SCOLON  (6)
+
+	SCOLON  shift 21
+	.  error
+
+
+state 15
+	function_def_parameters : OPAREN . fd_parameter_list CPAREN OPAREN fd_parameter_list CPAREN  (12)
+	fd_parameter : .  (13)
+
+	NUM  shift 22
+	STRG  shift 23
+	BOOL  shift 24
+	CPAREN  reduce 13
+	COMMA  reduce 13
+
+	fd_parameter_list  goto 25
+	fd_parameter  goto 26
+
+
+state 16
+	function_definition : SYMBOL function_def_parameters . statement_group  (11)
+
+	OCURLY  shift 27
+	.  error
+
+	statement_group  goto 28
+
+
+state 17
+	module : module module_element .  (2)
+
+	.  reduce 2
+
+
+state 18
+	var_definition : NUM COLON SYMBOL . ASSIGN NUMBER SCOLON  (7)
+
+	ASSIGN  shift 29
+	.  error
+
+
+state 19
+	var_definition : STRG COLON SYMBOL . ASSIGN STRING SCOLON  (8)
+
+	ASSIGN  shift 30
+	.  error
+
+
+state 20
+	var_definition : BOOL COLON SYMBOL . ASSIGN TRUE SCOLON  (9)
+	var_definition : BOOL COLON SYMBOL . ASSIGN FALSE SCOLON  (10)
+
+	ASSIGN  shift 31
+	.  error
+
+
+state 21
+	import_directive : IMPORT STRING SCOLON .  (6)
+
+	.  reduce 6
+
+
+state 22
+	fd_parameter : NUM . COLON SYMBOL  (14)
+
+	COLON  shift 32
+	.  error
+
+
+state 23
+	fd_parameter : STRG . COLON SYMBOL  (15)
+
+	COLON  shift 33
+	.  error
+
+
+state 24
+	fd_parameter : BOOL . COLON SYMBOL  (16)
+
+	COLON  shift 34
+	.  error
+
+
+state 25
+	function_def_parameters : OPAREN fd_parameter_list . CPAREN OPAREN fd_parameter_list CPAREN  (12)
+
+	CPAREN  shift 35
+	.  error
+
+
+state 26
+	fd_parameter_list : fd_parameter .  (17)
+	fd_parameter_list : fd_parameter . COMMA fd_parameter_list  (18)
+
+	COMMA  shift 36
+	CPAREN  reduce 17
+
+
+state 27
+	statement_group : OCURLY . statement_list CCURLY  (19)
+
+	NUM  shift 1
+	STRG  shift 2
+	BOOL  shift 3
+	RETURN  shift 37
+	IF  shift 38
+	WHILE  shift 39
+	FOR  shift 40
+	SWITCH  shift 41
+	OCURLY  shift 27
+	SYMBOL  shift 42
+	.  error
+
+	var_definition  goto 43
+	statement_group  goto 44
+	statement_list  goto 45
+	statement  goto 46
+	var_assignment  goto 47
+	function_call  goto 48
+	if_statement  goto 49
+	while_statement  goto 50
+	for_statement  goto 51
+	switch_statement  goto 52
+
+
+state 28
+	function_definition : SYMBOL function_def_parameters statement_group .  (11)
+
+	.  reduce 11
+
+
+state 29
+	var_definition : NUM COLON SYMBOL ASSIGN . NUMBER SCOLON  (7)
+
+	NUMBER  shift 53
+	.  error
+
+
+state 30
+	var_definition : STRG COLON SYMBOL ASSIGN . STRING SCOLON  (8)
+
+	STRING  shift 54
+	.  error
+
+
+state 31
+	var_definition : BOOL COLON SYMBOL ASSIGN . TRUE SCOLON  (9)
+	var_definition : BOOL COLON SYMBOL ASSIGN . FALSE SCOLON  (10)
+
+	TRUE  shift 55
+	FALSE  shift 56
+	.  error
+
+
+state 32
+	fd_parameter : NUM COLON . SYMBOL  (14)
+
+	SYMBOL  shift 57
+	.  error
+
+
+state 33
+	fd_parameter : STRG COLON . SYMBOL  (15)
+
+	SYMBOL  shift 58
+	.  error
+
+
+state 34
+	fd_parameter : BOOL COLON . SYMBOL  (16)
+
+	SYMBOL  shift 59
+	.  error
+
+
+state 35
+	function_def_parameters : OPAREN fd_parameter_list CPAREN . OPAREN fd_parameter_list CPAREN  (12)
+
+	OPAREN  shift 60
+	.  error
+
+
+state 36
+	fd_parameter_list : fd_parameter COMMA . fd_parameter_list  (18)
+	fd_parameter : .  (13)
+
+	NUM  shift 22
+	STRG  shift 23
+	BOOL  shift 24
+	CPAREN  reduce 13
+	COMMA  reduce 13
+
+	fd_parameter_list  goto 61
+	fd_parameter  goto 26
+
+
+state 37
+	statement : RETURN . SCOLON  (29)
+
+	SCOLON  shift 62
+	.  error
+
+
+state 38
+	if_statement : IF . OPAREN boolean_expression CPAREN statement_group else_clause_list  (82)
+	if_statement : IF . OPAREN boolean_expression CPAREN statement_group  (83)
+
+	OPAREN  shift 63
+	.  error
+
+
+state 39
+	while_statement : WHILE . OPAREN boolean_expression CPAREN loop_statement_group  (93)
+
+	OPAREN  shift 64
+	.  error
+
+
+state 40
+	for_statement : FOR . OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group  (94)
+
+	OPAREN  shift 65
+	.  error
+
+
+state 41
+	switch_statement : SWITCH . OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY  (95)
+	switch_statement : SWITCH . OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause  (96)
+
+	OPAREN  shift 66
+	.  error
+
+
+state 42
+	var_assignment : SYMBOL . ASSIGN expression SCOLON  (31)
+	function_call : SYMBOL . function_call_parameters SCOLON  (32)
+
+	OPAREN  shift 67
+	ASSIGN  shift 68
+	.  error
+
+	function_call_parameters  goto 69
+
+
+state 43
+	statement : var_definition .  (22)
+
+	.  reduce 22
+
+
+state 44
+	statement : statement_group .  (30)
+
+	.  reduce 30
+
+
+state 45
+	statement_group : OCURLY statement_list . CCURLY  (19)
+
+	CCURLY  shift 70
+	.  error
+
+
+state 46
+	statement_list : statement .  (20)
+	statement_list : statement . statement_list  (21)
+
+	NUM  shift 1
+	STRG  shift 2
+	BOOL  shift 3
+	RETURN  shift 37
+	IF  shift 38
+	WHILE  shift 39
+	FOR  shift 40
+	SWITCH  shift 41
+	OCURLY  shift 27
+	SYMBOL  shift 42
+	CCURLY  reduce 20
+
+	var_definition  goto 43
+	statement_group  goto 44
+	statement_list  goto 71
+	statement  goto 46
+	var_assignment  goto 47
+	function_call  goto 48
+	if_statement  goto 49
+	while_statement  goto 50
+	for_statement  goto 51
+	switch_statement  goto 52
+
+
+state 47
+	statement : var_assignment .  (23)
+
+	.  reduce 23
+
+
+state 48
+	statement : function_call .  (24)
+
+	.  reduce 24
+
+
+state 49
+	statement : if_statement .  (25)
+
+	.  reduce 25
+
+
+state 50
+	statement : while_statement .  (26)
+
+	.  reduce 26
+
+
+state 51
+	statement : for_statement .  (27)
+
+	.  reduce 27
+
+
+state 52
+	statement : switch_statement .  (28)
+
+	.  reduce 28
+
+
+state 53
+	var_definition : NUM COLON SYMBOL ASSIGN NUMBER . SCOLON  (7)
+
+	SCOLON  shift 72
+	.  error
+
+
+state 54
+	var_definition : STRG COLON SYMBOL ASSIGN STRING . SCOLON  (8)
+
+	SCOLON  shift 73
+	.  error
+
+
+state 55
+	var_definition : BOOL COLON SYMBOL ASSIGN TRUE . SCOLON  (9)
+
+	SCOLON  shift 74
+	.  error
+
+
+state 56
+	var_definition : BOOL COLON SYMBOL ASSIGN FALSE . SCOLON  (10)
+
+	SCOLON  shift 75
+	.  error
+
+
+state 57
+	fd_parameter : NUM COLON SYMBOL .  (14)
+
+	.  reduce 14
+
+
+state 58
+	fd_parameter : STRG COLON SYMBOL .  (15)
+
+	.  reduce 15
+
+
+state 59
+	fd_parameter : BOOL COLON SYMBOL .  (16)
+
+	.  reduce 16
+
+
+state 60
+	function_def_parameters : OPAREN fd_parameter_list CPAREN OPAREN . fd_parameter_list CPAREN  (12)
+	fd_parameter : .  (13)
+
+	NUM  shift 22
+	STRG  shift 23
+	BOOL  shift 24
+	CPAREN  reduce 13
+	COMMA  reduce 13
+
+	fd_parameter_list  goto 76
+	fd_parameter  goto 26
+
+
+state 61
+	fd_parameter_list : fd_parameter COMMA fd_parameter_list .  (18)
+
+	.  reduce 18
+
+
+state 62
+	statement : RETURN SCOLON .  (29)
+
+	.  reduce 29
+
+
+state 63
+	if_statement : IF OPAREN . boolean_expression CPAREN statement_group else_clause_list  (82)
+	if_statement : IF OPAREN . boolean_expression CPAREN statement_group  (83)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 84
+	FALSE  shift 85
+	CPAREN  reduce 57
+
+	boolean_expression  goto 86
+	boolean_function  goto 87
+
+
+state 64
+	while_statement : WHILE OPAREN . boolean_expression CPAREN loop_statement_group  (93)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 84
+	FALSE  shift 85
+	CPAREN  reduce 57
+
+	boolean_expression  goto 88
+	boolean_function  goto 87
+
+
+state 65
+	for_statement : FOR OPAREN . var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group  (94)
+
+	SYMBOL  shift 89
+	.  error
+
+	var_assignment  goto 90
+
+
+state 66
+	switch_statement : SWITCH OPAREN . SYMBOL CPAREN OCURLY case_clause_list CCURLY  (95)
+	switch_statement : SWITCH OPAREN . SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause  (96)
+
+	SYMBOL  shift 91
+	.  error
+
+
+67: reduce/reduce conflict (reduce 34, reduce 57) on CPAREN
+state 67
+	function_call_parameters : OPAREN . fc_parameter_list CPAREN OPAREN fc_parameter_list CPAREN  (33)
+	fc_parameter_list : .  (34)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 92
+	FALSE  shift 93
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 96
+	NUMBER  shift 97
+	STRING  shift 98
+	CPAREN  [trial] reduce 34
+	CPAREN  [trial] reduce 57
+	COMMA  reduce 57
+
+	fc_parameter_list  goto 99
+	fc_parameter  goto 100
+	arith_expression  goto 101
+	string_expression  goto 102
+	boolean_expression  goto 103
+	boolean_function  goto 87
+	arith_term  goto 104
+	arith_factor  goto 105
+
+
+state 68
+	var_assignment : SYMBOL ASSIGN . expression SCOLON  (31)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 84
+	FALSE  shift 85
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	STRING  shift 98
+	SCOLON  reduce 57
+
+	expression  goto 107
+	arith_expression  goto 108
+	string_expression  goto 109
+	boolean_expression  goto 110
+	boolean_function  goto 87
+	arith_term  goto 104
+	arith_factor  goto 105
+
+
+state 69
+	function_call : SYMBOL function_call_parameters . SCOLON  (32)
+
+	SCOLON  shift 111
+	.  error
+
+
+state 70
+	statement_group : OCURLY statement_list CCURLY .  (19)
+
+	.  reduce 19
+
+
+state 71
+	statement_list : statement statement_list .  (21)
+
+	.  reduce 21
+
+
+state 72
+	var_definition : NUM COLON SYMBOL ASSIGN NUMBER SCOLON .  (7)
+
+	.  reduce 7
+
+
+state 73
+	var_definition : STRG COLON SYMBOL ASSIGN STRING SCOLON .  (8)
+
+	.  reduce 8
+
+
+state 74
+	var_definition : BOOL COLON SYMBOL ASSIGN TRUE SCOLON .  (9)
+
+	.  reduce 9
+
+
+state 75
+	var_definition : BOOL COLON SYMBOL ASSIGN FALSE SCOLON .  (10)
+
+	.  reduce 10
+
+
+state 76
+	function_def_parameters : OPAREN fd_parameter_list CPAREN OPAREN fd_parameter_list . CPAREN  (12)
+
+	CPAREN  shift 112
+	.  error
+
+
+state 77
+	boolean_function : OR .  (69)
+
+	.  reduce 69
+
+
+state 78
+	boolean_function : AND .  (70)
+
+	.  reduce 70
+
+
+state 79
+	boolean_expression : NOT . OPAREN boolean_factor CPAREN  (61)
+
+	OPAREN  shift 113
+	.  error
+
+
+state 80
+	boolean_function : EQ .  (65)
+
+	.  reduce 65
+
+
+state 81
+	boolean_function : NEQ .  (66)
+
+	.  reduce 66
+
+
+state 82
+	boolean_function : MORE .  (67)
+
+	.  reduce 67
+
+
+state 83
+	boolean_function : LESS .  (68)
+
+	.  reduce 68
+
+
+state 84
+	boolean_expression : TRUE .  (58)
+
+	.  reduce 58
+
+
+state 85
+	boolean_expression : FALSE .  (59)
+
+	.  reduce 59
+
+
+state 86
+	if_statement : IF OPAREN boolean_expression . CPAREN statement_group else_clause_list  (82)
+	if_statement : IF OPAREN boolean_expression . CPAREN statement_group  (83)
+
+	CPAREN  shift 114
+	.  error
+
+
+state 87
+	boolean_expression : boolean_function . OPAREN boolean_factor COMMA boolean_factor CPAREN  (60)
+
+	OPAREN  shift 115
+	.  error
+
+
+state 88
+	while_statement : WHILE OPAREN boolean_expression . CPAREN loop_statement_group  (93)
+
+	CPAREN  shift 116
+	.  error
+
+
+state 89
+	var_assignment : SYMBOL . ASSIGN expression SCOLON  (31)
+
+	ASSIGN  shift 68
+	.  error
+
+
+state 90
+	for_statement : FOR OPAREN var_assignment . SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group  (94)
+
+	SCOLON  shift 117
+	.  error
+
+
+state 91
+	switch_statement : SWITCH OPAREN SYMBOL . CPAREN OCURLY case_clause_list CCURLY  (95)
+	switch_statement : SWITCH OPAREN SYMBOL . CPAREN OCURLY case_clause_list CCURLY else_clause  (96)
+
+	CPAREN  shift 118
+	.  error
+
+
+92: reduce/reduce conflict (reduce 38, reduce 58) on CPAREN
+92: reduce/reduce conflict (reduce 38, reduce 58) on COMMA
+state 92
+	fc_parameter : TRUE .  (38)
+	boolean_expression : TRUE .  (58)
+
+	CPAREN  [trial] reduce 38
+	CPAREN  [trial] reduce 58
+	COMMA  [trial] reduce 38
+	COMMA  [trial] reduce 58
+
+
+93: reduce/reduce conflict (reduce 39, reduce 59) on CPAREN
+93: reduce/reduce conflict (reduce 39, reduce 59) on COMMA
+state 93
+	fc_parameter : FALSE .  (39)
+	boolean_expression : FALSE .  (59)
+
+	CPAREN  [trial] reduce 39
+	CPAREN  [trial] reduce 59
+	COMMA  [trial] reduce 39
+	COMMA  [trial] reduce 59
+
+
+state 94
+	arith_factor : OPAREN . arith_expression CPAREN  (79)
+
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	.  error
+
+	arith_expression  goto 119
+	arith_term  goto 104
+	arith_factor  goto 105
+
+
+state 95
+	arith_factor : MINUS . arith_factor  (78)
+
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	.  error
+
+	arith_factor  goto 120
+
+
+96: reduce/reduce conflict (reduce 37, reduce 81) on CPAREN
+96: reduce/reduce conflict (reduce 37, reduce 81) on COMMA
+state 96
+	fc_parameter : SYMBOL .  (37)
+	arith_factor : SYMBOL .  (81)
+
+	CPAREN  [trial] reduce 37
+	CPAREN  [trial] reduce 81
+	COMMA  [trial] reduce 37
+	COMMA  [trial] reduce 81
+	PLUS  reduce 81
+	MINUS  reduce 81
+	MULT  reduce 81
+	DIV  reduce 81
+	MODULO  reduce 81
+
+
+state 97
+	arith_factor : NUMBER .  (80)
+
+	.  reduce 80
+
+
+state 98
+	string_expression : STRING .  (46)
+	string_expression : STRING . PLUS string_element_list  (47)
+
+	PLUS  shift 121
+	CPAREN  reduce 46
+	COMMA  reduce 46
+	SCOLON  reduce 46
+
+
+state 99
+	function_call_parameters : OPAREN fc_parameter_list . CPAREN OPAREN fc_parameter_list CPAREN  (33)
+
+	CPAREN  shift 122
+	.  error
+
+
+state 100
+	fc_parameter_list : fc_parameter .  (35)
+	fc_parameter_list : fc_parameter . COMMA fc_parameter_list  (36)
+
+	COMMA  shift 123
+	CPAREN  reduce 35
+
+
+state 101
+	fc_parameter : arith_expression .  (40)
+	arith_expression : arith_expression . PLUS arith_term  (71)
+	arith_expression : arith_expression . MINUS arith_term  (72)
+
+	PLUS  shift 124
+	MINUS  shift 125
+	CPAREN  reduce 40
+	COMMA  reduce 40
+
+
+state 102
+	fc_parameter : string_expression .  (41)
+
+	.  reduce 41
+
+
+state 103
+	fc_parameter : boolean_expression .  (42)
+
+	.  reduce 42
+
+
+state 104
+	arith_expression : arith_term .  (73)
+	arith_term : arith_term . MULT arith_factor  (74)
+	arith_term : arith_term . DIV arith_factor  (75)
+	arith_term : arith_term . MODULO arith_factor  (76)
+
+	MULT  shift 126
+	DIV  shift 127
+	MODULO  shift 128
+	CPAREN  reduce 73
+	COMMA  reduce 73
+	SCOLON  reduce 73
+	PLUS  reduce 73
+	MINUS  reduce 73
+
+
+state 105
+	arith_term : arith_factor .  (77)
+
+	.  reduce 77
+
+
+state 106
+	arith_factor : SYMBOL .  (81)
+
+	.  reduce 81
+
+
+state 107
+	var_assignment : SYMBOL ASSIGN expression . SCOLON  (31)
+
+	SCOLON  shift 129
+	.  error
+
+
+state 108
+	expression : arith_expression .  (44)
+	arith_expression : arith_expression . PLUS arith_term  (71)
+	arith_expression : arith_expression . MINUS arith_term  (72)
+
+	PLUS  shift 124
+	MINUS  shift 125
+	SCOLON  reduce 44
+
+
+state 109
+	expression : string_expression .  (45)
+
+	.  reduce 45
+
+
+state 110
+	expression : boolean_expression .  (43)
+
+	.  reduce 43
+
+
+state 111
+	function_call : SYMBOL function_call_parameters SCOLON .  (32)
+
+	.  reduce 32
+
+
+state 112
+	function_def_parameters : OPAREN fd_parameter_list CPAREN OPAREN fd_parameter_list CPAREN .  (12)
+
+	.  reduce 12
+
+
+state 113
+	boolean_expression : NOT OPAREN . boolean_factor CPAREN  (61)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 84
+	FALSE  shift 85
+	SYMBOL  shift 130
+	STRING  shift 131
+	CPAREN  reduce 57
+
+	boolean_expression  goto 132
+	boolean_function  goto 87
+	boolean_factor  goto 133
+
+
+state 114
+	if_statement : IF OPAREN boolean_expression CPAREN . statement_group else_clause_list  (82)
+	if_statement : IF OPAREN boolean_expression CPAREN . statement_group  (83)
+
+	OCURLY  shift 27
+	.  error
+
+	statement_group  goto 134
+
+
+state 115
+	boolean_expression : boolean_function OPAREN . boolean_factor COMMA boolean_factor CPAREN  (60)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 84
+	FALSE  shift 85
+	SYMBOL  shift 130
+	STRING  shift 131
+	COMMA  reduce 57
+
+	boolean_expression  goto 132
+	boolean_function  goto 87
+	boolean_factor  goto 135
+
+
+state 116
+	while_statement : WHILE OPAREN boolean_expression CPAREN . loop_statement_group  (93)
+
+	OCURLY  shift 136
+	.  error
+
+	loop_statement_group  goto 137
+
+
+state 117
+	for_statement : FOR OPAREN var_assignment SCOLON . boolean_expression SCOLON arith_expression CPAREN loop_statement_group  (94)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 84
+	FALSE  shift 85
+	SCOLON  reduce 57
+
+	boolean_expression  goto 138
+	boolean_function  goto 87
+
+
+state 118
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN . OCURLY case_clause_list CCURLY  (95)
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN . OCURLY case_clause_list CCURLY else_clause  (96)
+
+	OCURLY  shift 139
+	.  error
+
+
+state 119
+	arith_expression : arith_expression . PLUS arith_term  (71)
+	arith_expression : arith_expression . MINUS arith_term  (72)
+	arith_factor : OPAREN arith_expression . CPAREN  (79)
+
+	CPAREN  shift 140
+	PLUS  shift 124
+	MINUS  shift 125
+	.  error
+
+
+state 120
+	arith_factor : MINUS arith_factor .  (78)
+
+	.  reduce 78
+
+
+state 121
+	string_expression : STRING PLUS . string_element_list  (47)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 141
+	FALSE  shift 142
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 143
+	NUMBER  shift 144
+	STRING  shift 145
+	CPAREN  reduce 57
+	COMMA  reduce 57
+	SCOLON  reduce 57
+	PLUS  reduce 57
+
+	arith_expression  goto 146
+	boolean_expression  goto 147
+	string_element_list  goto 148
+	string_element  goto 149
+	boolean_function  goto 87
+	arith_term  goto 104
+	arith_factor  goto 105
+
+
+state 122
+	function_call_parameters : OPAREN fc_parameter_list CPAREN . OPAREN fc_parameter_list CPAREN  (33)
+
+	OPAREN  shift 150
+	.  error
+
+
+123: reduce/reduce conflict (reduce 34, reduce 57) on CPAREN
+state 123
+	fc_parameter_list : fc_parameter COMMA . fc_parameter_list  (36)
+	fc_parameter_list : .  (34)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 92
+	FALSE  shift 93
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 96
+	NUMBER  shift 97
+	STRING  shift 98
+	CPAREN  [trial] reduce 34
+	CPAREN  [trial] reduce 57
+	COMMA  reduce 57
+
+	fc_parameter_list  goto 151
+	fc_parameter  goto 100
+	arith_expression  goto 101
+	string_expression  goto 102
+	boolean_expression  goto 103
+	boolean_function  goto 87
+	arith_term  goto 104
+	arith_factor  goto 105
+
+
+state 124
+	arith_expression : arith_expression PLUS . arith_term  (71)
+
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	.  error
+
+	arith_term  goto 152
+	arith_factor  goto 105
+
+
+state 125
+	arith_expression : arith_expression MINUS . arith_term  (72)
+
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	.  error
+
+	arith_term  goto 153
+	arith_factor  goto 105
+
+
+state 126
+	arith_term : arith_term MULT . arith_factor  (74)
+
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	.  error
+
+	arith_factor  goto 154
+
+
+state 127
+	arith_term : arith_term DIV . arith_factor  (75)
+
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	.  error
+
+	arith_factor  goto 155
+
+
+state 128
+	arith_term : arith_term MODULO . arith_factor  (76)
+
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	.  error
+
+	arith_factor  goto 156
+
+
+state 129
+	var_assignment : SYMBOL ASSIGN expression SCOLON .  (31)
+
+	.  reduce 31
+
+
+state 130
+	boolean_factor : SYMBOL .  (63)
+
+	.  reduce 63
+
+
+state 131
+	boolean_factor : STRING .  (62)
+
+	.  reduce 62
+
+
+state 132
+	boolean_factor : boolean_expression .  (64)
+
+	.  reduce 64
+
+
+state 133
+	boolean_expression : NOT OPAREN boolean_factor . CPAREN  (61)
+
+	CPAREN  shift 157
+	.  error
+
+
+state 134
+	if_statement : IF OPAREN boolean_expression CPAREN statement_group . else_clause_list  (82)
+	if_statement : IF OPAREN boolean_expression CPAREN statement_group .  (83)
+
+	ELSE  shift 158
+	NUM  reduce 83
+	STRG  reduce 83
+	BOOL  reduce 83
+	RETURN  reduce 83
+	BREAK  reduce 83
+	CONT  reduce 83
+	IF  reduce 83
+	WHILE  reduce 83
+	FOR  reduce 83
+	SWITCH  reduce 83
+	OCURLY  reduce 83
+	CCURLY  reduce 83
+	SYMBOL  reduce 83
+
+	else_clause_list  goto 159
+	else_clause  goto 160
+
+
+state 135
+	boolean_expression : boolean_function OPAREN boolean_factor . COMMA boolean_factor CPAREN  (60)
+
+	COMMA  shift 161
+	.  error
+
+
+state 136
+	loop_statement_group : OCURLY . loop_statement_list CCURLY  (87)
+
+	NUM  shift 1
+	STRG  shift 2
+	BOOL  shift 3
+	RETURN  shift 37
+	BREAK  shift 162
+	CONT  shift 163
+	IF  shift 38
+	WHILE  shift 39
+	FOR  shift 40
+	SWITCH  shift 41
+	OCURLY  shift 27
+	SYMBOL  shift 42
+	.  error
+
+	var_definition  goto 43
+	statement_group  goto 44
+	statement  goto 164
+	var_assignment  goto 47
+	function_call  goto 48
+	if_statement  goto 49
+	while_statement  goto 50
+	for_statement  goto 51
+	switch_statement  goto 52
+	loop_statement_list  goto 165
+	loop_statement  goto 166
+
+
+state 137
+	while_statement : WHILE OPAREN boolean_expression CPAREN loop_statement_group .  (93)
+
+	.  reduce 93
+
+
+state 138
+	for_statement : FOR OPAREN var_assignment SCOLON boolean_expression . SCOLON arith_expression CPAREN loop_statement_group  (94)
+
+	SCOLON  shift 167
+	.  error
+
+
+state 139
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN OCURLY . case_clause_list CCURLY  (95)
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN OCURLY . case_clause_list CCURLY else_clause  (96)
+
+	CASE  shift 168
+	.  error
+
+	case_clause_list  goto 169
+	case_clause  goto 170
+
+
+state 140
+	arith_factor : OPAREN arith_expression CPAREN .  (79)
+
+	.  reduce 79
+
+
+141: reduce/reduce conflict (reduce 53, reduce 58) on CPAREN
+141: reduce/reduce conflict (reduce 53, reduce 58) on COMMA
+141: reduce/reduce conflict (reduce 53, reduce 58) on SCOLON
+141: reduce/reduce conflict (reduce 53, reduce 58) on PLUS
+state 141
+	string_element : TRUE .  (53)
+	boolean_expression : TRUE .  (58)
+
+	CPAREN  [trial] reduce 53
+	CPAREN  [trial] reduce 58
+	COMMA  [trial] reduce 53
+	COMMA  [trial] reduce 58
+	SCOLON  [trial] reduce 53
+	SCOLON  [trial] reduce 58
+	PLUS  [trial] reduce 53
+	PLUS  [trial] reduce 58
+
+
+142: reduce/reduce conflict (reduce 54, reduce 59) on CPAREN
+142: reduce/reduce conflict (reduce 54, reduce 59) on COMMA
+142: reduce/reduce conflict (reduce 54, reduce 59) on SCOLON
+142: reduce/reduce conflict (reduce 54, reduce 59) on PLUS
+state 142
+	string_element : FALSE .  (54)
+	boolean_expression : FALSE .  (59)
+
+	CPAREN  [trial] reduce 54
+	CPAREN  [trial] reduce 59
+	COMMA  [trial] reduce 54
+	COMMA  [trial] reduce 59
+	SCOLON  [trial] reduce 54
+	SCOLON  [trial] reduce 59
+	PLUS  [trial] reduce 54
+	PLUS  [trial] reduce 59
+
+
+143: reduce/reduce conflict (reduce 51, reduce 81) on CPAREN
+143: reduce/reduce conflict (reduce 51, reduce 81) on COMMA
+143: reduce/reduce conflict (reduce 51, reduce 81) on SCOLON
+143: reduce/reduce conflict (reduce 51, reduce 81) on PLUS
+state 143
+	string_element : SYMBOL .  (51)
+	arith_factor : SYMBOL .  (81)
+
+	CPAREN  [trial] reduce 51
+	CPAREN  [trial] reduce 81
+	COMMA  [trial] reduce 51
+	COMMA  [trial] reduce 81
+	SCOLON  [trial] reduce 51
+	SCOLON  [trial] reduce 81
+	PLUS  [trial] reduce 51
+	PLUS  [trial] reduce 81
+	MINUS  reduce 81
+	MULT  reduce 81
+	DIV  reduce 81
+	MODULO  reduce 81
+
+
+144: reduce/reduce conflict (reduce 52, reduce 80) on CPAREN
+144: reduce/reduce conflict (reduce 52, reduce 80) on COMMA
+144: reduce/reduce conflict (reduce 52, reduce 80) on SCOLON
+144: reduce/reduce conflict (reduce 52, reduce 80) on PLUS
+state 144
+	string_element : NUMBER .  (52)
+	arith_factor : NUMBER .  (80)
+
+	CPAREN  [trial] reduce 52
+	CPAREN  [trial] reduce 80
+	COMMA  [trial] reduce 52
+	COMMA  [trial] reduce 80
+	SCOLON  [trial] reduce 52
+	SCOLON  [trial] reduce 80
+	PLUS  [trial] reduce 52
+	PLUS  [trial] reduce 80
+	MINUS  reduce 80
+	MULT  reduce 80
+	DIV  reduce 80
+	MODULO  reduce 80
+
+
+state 145
+	string_element : STRING .  (50)
+
+	.  reduce 50
+
+
+146: shift/reduce conflict (shift 124, reduce 56) on PLUS
+state 146
+	string_element : arith_expression .  (56)
+	arith_expression : arith_expression . PLUS arith_term  (71)
+	arith_expression : arith_expression . MINUS arith_term  (72)
+
+	PLUS  [trial] shift 124
+	MINUS  shift 125
+	CPAREN  reduce 56
+	COMMA  reduce 56
+	SCOLON  reduce 56
+	PLUS  [trial] reduce 56
+
+
+state 147
+	string_element : boolean_expression .  (55)
+
+	.  reduce 55
+
+
+state 148
+	string_expression : STRING PLUS string_element_list .  (47)
+
+	.  reduce 47
+
+
+state 149
+	string_element_list : string_element .  (48)
+	string_element_list : string_element . PLUS string_element_list  (49)
+
+	PLUS  shift 171
+	CPAREN  reduce 48
+	COMMA  reduce 48
+	SCOLON  reduce 48
+
+
+150: reduce/reduce conflict (reduce 34, reduce 57) on CPAREN
+state 150
+	function_call_parameters : OPAREN fc_parameter_list CPAREN OPAREN . fc_parameter_list CPAREN  (33)
+	fc_parameter_list : .  (34)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 92
+	FALSE  shift 93
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 96
+	NUMBER  shift 97
+	STRING  shift 98
+	CPAREN  [trial] reduce 34
+	CPAREN  [trial] reduce 57
+	COMMA  reduce 57
+
+	fc_parameter_list  goto 172
+	fc_parameter  goto 100
+	arith_expression  goto 101
+	string_expression  goto 102
+	boolean_expression  goto 103
+	boolean_function  goto 87
+	arith_term  goto 104
+	arith_factor  goto 105
+
+
+state 151
+	fc_parameter_list : fc_parameter COMMA fc_parameter_list .  (36)
+
+	.  reduce 36
+
+
+state 152
+	arith_expression : arith_expression PLUS arith_term .  (71)
+	arith_term : arith_term . MULT arith_factor  (74)
+	arith_term : arith_term . DIV arith_factor  (75)
+	arith_term : arith_term . MODULO arith_factor  (76)
+
+	MULT  shift 126
+	DIV  shift 127
+	MODULO  shift 128
+	CPAREN  reduce 71
+	COMMA  reduce 71
+	SCOLON  reduce 71
+	PLUS  reduce 71
+	MINUS  reduce 71
+
+
+state 153
+	arith_expression : arith_expression MINUS arith_term .  (72)
+	arith_term : arith_term . MULT arith_factor  (74)
+	arith_term : arith_term . DIV arith_factor  (75)
+	arith_term : arith_term . MODULO arith_factor  (76)
+
+	MULT  shift 126
+	DIV  shift 127
+	MODULO  shift 128
+	CPAREN  reduce 72
+	COMMA  reduce 72
+	SCOLON  reduce 72
+	PLUS  reduce 72
+	MINUS  reduce 72
+
+
+state 154
+	arith_term : arith_term MULT arith_factor .  (74)
+
+	.  reduce 74
+
+
+state 155
+	arith_term : arith_term DIV arith_factor .  (75)
+
+	.  reduce 75
+
+
+state 156
+	arith_term : arith_term MODULO arith_factor .  (76)
+
+	.  reduce 76
+
+
+state 157
+	boolean_expression : NOT OPAREN boolean_factor CPAREN .  (61)
+
+	.  reduce 61
+
+
+state 158
+	else_clause : ELSE . OPAREN boolean_expression CPAREN statement_group  (86)
+
+	OPAREN  shift 173
+	.  error
+
+
+state 159
+	if_statement : IF OPAREN boolean_expression CPAREN statement_group else_clause_list .  (82)
+
+	.  reduce 82
+
+
+state 160
+	else_clause_list : else_clause .  (84)
+	else_clause_list : else_clause . else_clause_list  (85)
+
+	ELSE  shift 158
+	NUM  reduce 84
+	STRG  reduce 84
+	BOOL  reduce 84
+	RETURN  reduce 84
+	BREAK  reduce 84
+	CONT  reduce 84
+	IF  reduce 84
+	WHILE  reduce 84
+	FOR  reduce 84
+	SWITCH  reduce 84
+	OCURLY  reduce 84
+	CCURLY  reduce 84
+	SYMBOL  reduce 84
+
+	else_clause_list  goto 174
+	else_clause  goto 160
+
+
+state 161
+	boolean_expression : boolean_function OPAREN boolean_factor COMMA . boolean_factor CPAREN  (60)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 84
+	FALSE  shift 85
+	SYMBOL  shift 130
+	STRING  shift 131
+	CPAREN  reduce 57
+
+	boolean_expression  goto 132
+	boolean_function  goto 87
+	boolean_factor  goto 175
+
+
+state 162
+	loop_statement : BREAK . SCOLON  (92)
+
+	SCOLON  shift 176
+	.  error
+
+
+state 163
+	loop_statement : CONT . SCOLON  (91)
+
+	SCOLON  shift 177
+	.  error
+
+
+state 164
+	loop_statement : statement .  (90)
+
+	.  reduce 90
+
+
+state 165
+	loop_statement_group : OCURLY loop_statement_list . CCURLY  (87)
+
+	CCURLY  shift 178
+	.  error
+
+
+state 166
+	loop_statement_list : loop_statement .  (88)
+	loop_statement_list : loop_statement . loop_statement_list  (89)
+
+	NUM  shift 1
+	STRG  shift 2
+	BOOL  shift 3
+	RETURN  shift 37
+	BREAK  shift 162
+	CONT  shift 163
+	IF  shift 38
+	WHILE  shift 39
+	FOR  shift 40
+	SWITCH  shift 41
+	OCURLY  shift 27
+	SYMBOL  shift 42
+	CCURLY  reduce 88
+
+	var_definition  goto 43
+	statement_group  goto 44
+	statement  goto 164
+	var_assignment  goto 47
+	function_call  goto 48
+	if_statement  goto 49
+	while_statement  goto 50
+	for_statement  goto 51
+	switch_statement  goto 52
+	loop_statement_list  goto 179
+	loop_statement  goto 166
+
+
+state 167
+	for_statement : FOR OPAREN var_assignment SCOLON boolean_expression SCOLON . arith_expression CPAREN loop_statement_group  (94)
+
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 106
+	NUMBER  shift 97
+	.  error
+
+	arith_expression  goto 180
+	arith_term  goto 104
+	arith_factor  goto 105
+
+
+state 168
+	case_clause : CASE . OPAREN SYMBOL CPAREN statement_group  (99)
+	case_clause : CASE . OPAREN NUMBER CPAREN statement_group  (100)
+	case_clause : CASE . OPAREN STRING CPAREN statement_group  (101)
+	case_clause : CASE . OPAREN TRUE CPAREN statement_group  (102)
+	case_clause : CASE . OPAREN FALSE CPAREN statement_group  (103)
+
+	OPAREN  shift 181
+	.  error
+
+
+state 169
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list . CCURLY  (95)
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list . CCURLY else_clause  (96)
+
+	CCURLY  shift 182
+	.  error
+
+
+state 170
+	case_clause_list : case_clause .  (97)
+	case_clause_list : case_clause . case_clause_list  (98)
+
+	CASE  shift 168
+	CCURLY  reduce 97
+
+	case_clause_list  goto 183
+	case_clause  goto 170
+
+
+state 171
+	string_element_list : string_element PLUS . string_element_list  (49)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 141
+	FALSE  shift 142
+	OPAREN  shift 94
+	MINUS  shift 95
+	SYMBOL  shift 143
+	NUMBER  shift 144
+	STRING  shift 145
+	CPAREN  reduce 57
+	COMMA  reduce 57
+	SCOLON  reduce 57
+	PLUS  reduce 57
+
+	arith_expression  goto 146
+	boolean_expression  goto 147
+	string_element_list  goto 184
+	string_element  goto 149
+	boolean_function  goto 87
+	arith_term  goto 104
+	arith_factor  goto 105
+
+
+state 172
+	function_call_parameters : OPAREN fc_parameter_list CPAREN OPAREN fc_parameter_list . CPAREN  (33)
+
+	CPAREN  shift 185
+	.  error
+
+
+state 173
+	else_clause : ELSE OPAREN . boolean_expression CPAREN statement_group  (86)
+	boolean_expression : .  (57)
+
+	OR  shift 77
+	AND  shift 78
+	NOT  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	MORE  shift 82
+	LESS  shift 83
+	TRUE  shift 84
+	FALSE  shift 85
+	CPAREN  reduce 57
+
+	boolean_expression  goto 186
+	boolean_function  goto 87
+
+
+state 174
+	else_clause_list : else_clause else_clause_list .  (85)
+
+	.  reduce 85
+
+
+state 175
+	boolean_expression : boolean_function OPAREN boolean_factor COMMA boolean_factor . CPAREN  (60)
+
+	CPAREN  shift 187
+	.  error
+
+
+state 176
+	loop_statement : BREAK SCOLON .  (92)
+
+	.  reduce 92
+
+
+state 177
+	loop_statement : CONT SCOLON .  (91)
+
+	.  reduce 91
+
+
+state 178
+	loop_statement_group : OCURLY loop_statement_list CCURLY .  (87)
+
+	.  reduce 87
+
+
+state 179
+	loop_statement_list : loop_statement loop_statement_list .  (89)
+
+	.  reduce 89
+
+
+state 180
+	arith_expression : arith_expression . PLUS arith_term  (71)
+	arith_expression : arith_expression . MINUS arith_term  (72)
+	for_statement : FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression . CPAREN loop_statement_group  (94)
+
+	CPAREN  shift 188
+	PLUS  shift 124
+	MINUS  shift 125
+	.  error
+
+
+state 181
+	case_clause : CASE OPAREN . SYMBOL CPAREN statement_group  (99)
+	case_clause : CASE OPAREN . NUMBER CPAREN statement_group  (100)
+	case_clause : CASE OPAREN . STRING CPAREN statement_group  (101)
+	case_clause : CASE OPAREN . TRUE CPAREN statement_group  (102)
+	case_clause : CASE OPAREN . FALSE CPAREN statement_group  (103)
+
+	TRUE  shift 189
+	FALSE  shift 190
+	SYMBOL  shift 191
+	NUMBER  shift 192
+	STRING  shift 193
+	.  error
+
+
+state 182
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY .  (95)
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY . else_clause  (96)
+
+	ELSE  shift 158
+	NUM  reduce 95
+	STRG  reduce 95
+	BOOL  reduce 95
+	RETURN  reduce 95
+	BREAK  reduce 95
+	CONT  reduce 95
+	IF  reduce 95
+	WHILE  reduce 95
+	FOR  reduce 95
+	SWITCH  reduce 95
+	OCURLY  reduce 95
+	CCURLY  reduce 95
+	SYMBOL  reduce 95
+
+	else_clause  goto 194
+
+
+state 183
+	case_clause_list : case_clause case_clause_list .  (98)
+
+	.  reduce 98
+
+
+state 184
+	string_element_list : string_element PLUS string_element_list .  (49)
+
+	.  reduce 49
+
+
+state 185
+	function_call_parameters : OPAREN fc_parameter_list CPAREN OPAREN fc_parameter_list CPAREN .  (33)
+
+	.  reduce 33
+
+
+state 186
+	else_clause : ELSE OPAREN boolean_expression . CPAREN statement_group  (86)
+
+	CPAREN  shift 195
+	.  error
+
+
+state 187
+	boolean_expression : boolean_function OPAREN boolean_factor COMMA boolean_factor CPAREN .  (60)
+
+	.  reduce 60
+
+
+state 188
+	for_statement : FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN . loop_statement_group  (94)
+
+	OCURLY  shift 136
+	.  error
+
+	loop_statement_group  goto 196
+
+
+state 189
+	case_clause : CASE OPAREN TRUE . CPAREN statement_group  (102)
+
+	CPAREN  shift 197
+	.  error
+
+
+state 190
+	case_clause : CASE OPAREN FALSE . CPAREN statement_group  (103)
+
+	CPAREN  shift 198
+	.  error
+
+
+state 191
+	case_clause : CASE OPAREN SYMBOL . CPAREN statement_group  (99)
+
+	CPAREN  shift 199
+	.  error
+
+
+state 192
+	case_clause : CASE OPAREN NUMBER . CPAREN statement_group  (100)
+
+	CPAREN  shift 200
+	.  error
+
+
+state 193
+	case_clause : CASE OPAREN STRING . CPAREN statement_group  (101)
+
+	CPAREN  shift 201
+	.  error
+
+
+state 194
+	switch_statement : SWITCH OPAREN SYMBOL CPAREN OCURLY case_clause_list CCURLY else_clause .  (96)
+
+	.  reduce 96
+
+
+state 195
+	else_clause : ELSE OPAREN boolean_expression CPAREN . statement_group  (86)
+
+	OCURLY  shift 27
+	.  error
+
+	statement_group  goto 202
+
+
+state 196
+	for_statement : FOR OPAREN var_assignment SCOLON boolean_expression SCOLON arith_expression CPAREN loop_statement_group .  (94)
+
+	.  reduce 94
+
+
+state 197
+	case_clause : CASE OPAREN TRUE CPAREN . statement_group  (102)
+
+	OCURLY  shift 27
+	.  error
+
+	statement_group  goto 203
+
+
+state 198
+	case_clause : CASE OPAREN FALSE CPAREN . statement_group  (103)
+
+	OCURLY  shift 27
+	.  error
+
+	statement_group  goto 204
+
+
+state 199
+	case_clause : CASE OPAREN SYMBOL CPAREN . statement_group  (99)
+
+	OCURLY  shift 27
+	.  error
+
+	statement_group  goto 205
+
+
+state 200
+	case_clause : CASE OPAREN NUMBER CPAREN . statement_group  (100)
+
+	OCURLY  shift 27
+	.  error
+
+	statement_group  goto 206
+
+
+state 201
+	case_clause : CASE OPAREN STRING CPAREN . statement_group  (101)
+
+	OCURLY  shift 27
+	.  error
+
+	statement_group  goto 207
+
+
+state 202
+	else_clause : ELSE OPAREN boolean_expression CPAREN statement_group .  (86)
+
+	.  reduce 86
+
+
+state 203
+	case_clause : CASE OPAREN TRUE CPAREN statement_group .  (102)
+
+	.  reduce 102
+
+
+state 204
+	case_clause : CASE OPAREN FALSE CPAREN statement_group .  (103)
+
+	.  reduce 103
+
+
+state 205
+	case_clause : CASE OPAREN SYMBOL CPAREN statement_group .  (99)
+
+	.  reduce 99
+
+
+state 206
+	case_clause : CASE OPAREN NUMBER CPAREN statement_group .  (100)
+
+	.  reduce 100
+
+
+state 207
+	case_clause : CASE OPAREN STRING CPAREN statement_group .  (101)
+
+	.  reduce 101
+
+
+State 67 contains 1 reduce/reduce conflict.
+State 92 contains 2 reduce/reduce conflicts.
+State 93 contains 2 reduce/reduce conflicts.
+State 96 contains 2 reduce/reduce conflicts.
+State 123 contains 1 reduce/reduce conflict.
+State 141 contains 4 reduce/reduce conflicts.
+State 142 contains 4 reduce/reduce conflicts.
+State 143 contains 4 reduce/reduce conflicts.
+State 144 contains 4 reduce/reduce conflicts.
+State 146 contains 1 shift/reduce conflict.
+State 150 contains 1 reduce/reduce conflict.
+
+
+49 terminals, 38 nonterminals
+104 grammar rules, 208 states
+
+grammar parser grammar
+symbol# value# symbol
+     0      0  $end
+     1    256  error
+     2    257  NUM
+     3    258  STRG
+     4    259  BOOL
+     5    260  IMPORT
+     6    261  RETURN
+     7    262  BREAK
+     8    263  CONT
+     9    264  IF
+    10    265  ELSE
+    11    266  WHILE
+    12    267  FOR
+    13    268  SWITCH
+    14    269  CASE
+    15    270  OR
+    16    271  AND
+    17    272  NOT
+    18    273  EQ
+    19    274  NEQ
+    20    275  MORE
+    21    276  LESS
+    22    277  TRUE
+    23    278  FALSE
+    24    279  OPAREN
+    25    280  CPAREN
+    26    281  OCURLY
+    27    282  CCURLY
+    28    283  OBOX
+    29    284  CBOX
+    30    285  COMMA
+    31    286  SCOLON
+    32    287  DOT
+    33    288  COLON
+    34    289  PLUS
+    35    290  MINUS
+    36    291  MULT
+    37    292  DIV
+    38    293  MODULO
+    39    294  ASSIGN
+    40    295  SYMBOL
+    41    296  NUMBER
+    42    297  STRING
+    43    298  TILDE
+    44    299  PIPE
+    45    300  AMPER
+    46    301  CARAT
+    47    302  END_CONTEXT
+    48    303  END_INPUT
+    49    304  $accept
+    50    305  module
+    51    306  module_element
+    52    307  import_directive
+    53    308  var_definition
+    54    309  function_definition
+    55    310  function_def_parameters
+    56    311  statement_group
+    57    312  fd_parameter_list
+    58    313  fd_parameter
+    59    314  statement_list
+    60    315  statement
+    61    316  var_assignment
+    62    317  function_call
+    63    318  if_statement
+    64    319  while_statement
+    65    320  for_statement
+    66    321  switch_statement
+    67    322  expression
+    68    323  function_call_parameters
+    69    324  fc_parameter_list
+    70    325  fc_parameter
+    71    326  arith_expression
+    72    327  string_expression
+    73    328  boolean_expression
+    74    329  string_element_list
+    75    330  string_element
+    76    331  boolean_function
+    77    332  boolean_factor
+    78    333  arith_term
+    79    334  arith_factor
+    80    335  else_clause_list
+    81    336  else_clause
+    82    337  loop_statement_group
+    83    338  loop_statement_list
+    84    339  loop_statement
+    85    340  case_clause_list
+    86    341  case_clause
