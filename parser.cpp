@@ -2,11 +2,13 @@
 
 #include "simple.h"
 
-Parser* Parser::instance = NULL;
+Parser* Parser::instance = nullptr;
 
 Parser::Parser() {}
 
-Parser::~Parser() {}
+Parser::~Parser() {
+    destroy_parser();
+}
 
 void Parser::init_parser(const string fname) {
     lexer = new Lexer();

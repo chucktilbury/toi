@@ -44,21 +44,19 @@ public:
         return symtable->find_attr(sym_name, attr_name, type);
     }
 
-
-    static Parser* get_instance(void) {
-        if(instance == NULL)
+    static Parser* get_instance() {
+        if(instance == nullptr) {
             instance = new Parser();
+        }
         return instance;
     }
 
 private:
-    static Parser* instance;
-    Parser(const Parser&);
-    Parser& operator=(const Parser&);
-
     Lexer* lexer;
     Context* context;
     SymTable* symtable;
+
+    static Parser* instance;
 
 };
 

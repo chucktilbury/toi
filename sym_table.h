@@ -1,6 +1,7 @@
 #ifndef _SYMTABLE_H_
 #define _SYMTABLE_H_
 
+#include <iostream>
 #include <unordered_map>
 #include <string>
 #include "simple.h"
@@ -41,7 +42,8 @@ public:
         // TODO: figure out how to deal with the data pointers.
         for(auto& key: symtable) {
             for(auto& name: symtable[key.first]->attr) {
-                delete name.second;
+                if(name.second)
+                    delete name.second;
             }
         }
     }
@@ -76,6 +78,22 @@ public:
             return false;
         else 
             return true;
+    }
+
+    void dump() {
+        // ToDo: function to iterate the symbol table and print out the results.
+        // This should not be present at run time, if possible.
+        cout << "Dump SymbolTable\n";
+        for(auto& key: symtable) {
+            cout << "  symbol: " << key.first << endl;
+            for(auto& name: symtable[key.first]->attr) {
+                cout << "    " << name.first << " type: " << symtable[key.first]->attr[name.first]->type;
+                if(name.second)
+                    cout << " data is present\n";
+                else 
+                    cout << " no data";
+            }
+        }
     }
 
 private:
