@@ -1,5 +1,5 @@
-#ifndef _SIMPLE_H_
-#define _SIMPLE_H_
+#ifndef _TOI_H_
+#define _TOI_H_
 
 #include "file_stack.h"
 #include "lexer.h"
@@ -8,4 +8,7 @@
 #include "parser.h"
 #include "logging.h"
 
-#endif /* _SIMPLE_H_ */
+#include "parse_method_def.h"
+#include "parse_import.h"
+
+#endif /* _TOI_H_ */

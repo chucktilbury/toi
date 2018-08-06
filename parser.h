@@ -2,7 +2,7 @@
 #define _PARSER_H_
 
 #include <string>
-#include "simple.h"
+#include "toi.h"
 
 using namespace std;
 

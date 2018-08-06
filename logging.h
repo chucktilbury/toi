@@ -6,7 +6,7 @@
 #include <cstdint>
 
 // for line numbers in error messages
-#include "simple.h"
+#include "toi.h"
 
 using namespace std;
 
@@ -19,6 +19,9 @@ typedef enum {
     INTERNAL,
     FATAL,
 } typelog_t;
+
+#define ENTER() Logging(DEBUG) << "Enter: " << __FILE__ << ", " << __LINE__ << ", " << __func__;
+#define MARK() Logging(DEBUG) << "Mark: " << __FILE__ << ", " << __LINE__ << ", " << __func__;
 
 class Logging {
 public:

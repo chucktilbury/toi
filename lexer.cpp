@@ -6,7 +6,7 @@
 #include <string>
 #include <cstring>
 
-#include "simple.h"
+#include "toi.h"
 
 // convert the case of a letter, but leave other characters unchanged
 #define TOUPPER(c) (((c)>='a'&&(c)<='z')?(c)-('a'-'A'):(c))

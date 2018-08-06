@@ -1,6 +1,6 @@
 
 
-#include "simple.h"
+#include "toi.h"
 
 Parser* Parser::instance = nullptr;
 
@@ -23,8 +23,27 @@ void Parser::destroy_parser() {
     delete symtable;
 }
 
+// Items that may appear in the root context of a file are parsed here.
 SymTable* Parser::load_program() {
 
-    return symtable;
+    bool finished = false;
+    lexer_token_t tok;
+
+    while(!finished) {
+        tok = lexer->get_token();
+        switch(tok) {
+            case IMPORT:
+                finished = ParseImport().parse(); 
+                break;
+            case SYMBOL:
+                finished = ParseMethodDef().parse();
+                break;
+            default:
+                Logging(SYNTAX) << "expected a import or method definition but got " << lexer->token_string();
+                finished = true;
+        }
+    }
+
+    return symtable; 
 }
- 
+
