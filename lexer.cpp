@@ -457,7 +457,7 @@ lexer_token_t Lexer::get_symchar(int ch)
         }
     } while(add_token_char(nch));
 
-    for(i = 0; symtok_table[i].tok != 0; i++)
+    for(i = 0; symtok_table[i].tok != ERROR_TOKEN; i++)
     {
         if(!strcmp((const char*)token_buffer, symtok_table[i].sym.c_str()))
             return symtok_table[i].tok;

@@ -38,8 +38,12 @@ SymTable* Parser::load_program() {
             case SYMBOL:
                 finished = ParseMethodDef().parse();
                 break;
+            case END_INPUT:
+                Logging(DEBUG) << "end of input: context: " << get_context();
+                finished = true;
+                break;
             default:
-                Logging(SYNTAX) << "expected a import or method definition but got " << lexer->token_string();
+                Logging(SYNTAX) << "expected a import or method definition but got \"" << lexer->token_string() << "\"";
                 finished = true;
         }
     }

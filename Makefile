@@ -5,6 +5,7 @@ OBJS 	= 	file_stack.o \
 			parser.o \
 			parse_import.o \
 			parse_method_def.o \
+			parse_statements.o \
 			toi.o
 
 HEADERS	=	sym_table.h \
@@ -15,6 +16,7 @@ HEADERS	=	sym_table.h \
 			parser.h \
 			parse_import.h \
 			parse_method_def.h \
+			parse_statements.h \
 			toi.h
 
 TARGET 	=	toi
@@ -36,6 +38,7 @@ parser.o: parser.cpp $(HEADERS)
 context.o: context.cpp $(HEADERS)
 parse_import.o: parse_import.cpp $(HEADERS)
 parse_method_def.o: parse_method_def.cpp $(HEADERS)
+parse_statements.o: parse_statements.cpp $(HEADERS)
 
 clean:
 	rm -f $(TARGET) $(OBJS)

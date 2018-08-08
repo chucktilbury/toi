@@ -10,13 +10,22 @@
 class ParseImport {
 
 public:
-    ParseImport();
-    ~ParseImport();
+    ParseImport() {
+        MARK("ENTER");
+        parser = Parser::get_instance();
+        MARK("RETURN");
+    }
+
+    ~ParseImport() {
+        MARK("ENTER");
+        MARK("RETURN");
+    }
 
     bool parse();
 
 private: 
     Parser* parser;
+    bool import_file(const string fname);
 };
 
 #endif /* _PARSE_IMPORT_H_ */ 

@@ -11,6 +11,8 @@ using namespace std;
 typedef enum {
     INVALID_ATTR = 1,
     FUNC_DEF = 2000,    // funcion call definition
+    CONTEXT,            // context of the symbol
+    USER_DEF_TYPE,      // User defined type
     NUM_DEF,            // definition of a numeric value
     STRING_DEF,         // definition of a string value
     BOOL_DEF,           // definition of a boolean value

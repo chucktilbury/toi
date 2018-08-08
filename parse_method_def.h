@@ -12,13 +12,26 @@
 class ParseMethodDef {
 
 public:
-    ParseMethodDef();
-    ~ParseMethodDef();
+    ParseMethodDef() {
+        MARK("ENTER");
+        parser = Parser::get_instance();
+        MARK("RETURN");
+    }
+
+    ~ParseMethodDef() {
+        MARK("ENTER");
+        MARK("RETURN");
+    }
 
     bool parse();
 
 private: 
     Parser* parser;
+
+    bool read_input_parameters();
+    bool read_output_parameters();
+    bool read_parameter_list();
+
 };
 
 

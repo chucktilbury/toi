@@ -24,6 +24,8 @@ public:
     string file_name(void) { return lexer->file_name(); }
     int line_number(void) { return lexer->line_number(); }
     void open_file(string name) { lexer->open_file(name); }
+    const char* get_token_str() {return lexer->token_string(); }
+    lexer_token_t get_token() { return lexer->get_token(); }
 
     // interface to the parsing context
     void push_context(string name) { context-> push_context(name); }

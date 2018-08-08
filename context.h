@@ -19,8 +19,8 @@ public:
     // This is called when a class or method is entered. When a "{"
     // that is connected with a name is seen.
     void push_context(string name) {
-        context += "@";
         context += name;
+        context += "@";
     }
 
     void push_anonymous_context() {
@@ -31,7 +31,7 @@ public:
         // as it is at run time. Maybe this just needs to be stored in the 
         // symbol table, but I want to also allow ananymous contexts that 
         // have no anchor to an if() or while().
-        
+
         // NOTE that anonymous contexts will always appear in the execution 
         // stream and not in a symbol table.
     }
