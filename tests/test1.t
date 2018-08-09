@@ -1,6 +1,6 @@
 
 import some_junk;
 
-some_method()(){}
+some_method(num:abc, strg:xyz)(SomeClass:asdf){}
 
-some_other(num:ased)(string:plart) {}
+some_other(bool:bacon, bool:eggs)(bool:retv) {}

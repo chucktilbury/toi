@@ -32,6 +32,7 @@ typedef enum {
     WHILE_BRANCH,       // a "while" anonymous branch
     FOR_BRANCH,         // an anonymous "for" branch
     SWITCH_BRANCH,      // an anonymous switch/case branch
+    TYPE_NAME,
 } sym_attr_type_t;
 
 

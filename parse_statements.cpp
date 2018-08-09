@@ -8,15 +8,25 @@ bool Statements::parse(const string name) {
     bool retv = false;
     bool finished = false;
 
-    while(!finished) {
-        tok = parser->get_token();
-        switch(tok) { 
-            case END_INPUT:
-                Logging(DEBUG) << "end of input: context: " << parser->get_context();
-                finished = true;
-                break;
-            default:
-                Logging(DEBUG) << "token is: " << parser->get_token_str();
+    tok = parser->get_token();
+    if(tok != OCURLY) {
+        SYNTAX_ERR("a {");
+        retv = true;
+    }
+    else {
+        while(!finished) {
+            tok = parser->get_token();
+            switch(tok) { 
+                case END_INPUT:
+                    Logging(DEBUG) << "end of input: context: " << parser->get_context();
+                    finished = true;
+                    break;
+                case CCURLY:
+                    finished = true;
+                    break;
+                default:
+                    Logging(DEBUG) << "token is: " << parser->get_token_str();
+            }
         }
     }
 

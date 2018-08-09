@@ -42,6 +42,10 @@ SymTable* Parser::load_program() {
                 Logging(DEBUG) << "end of input: context: " << get_context();
                 finished = true;
                 break;
+            case END_CONTEXT:
+                Logging(DEBUG) << "end of context: context: " << get_context();
+                break;
+
             default:
                 Logging(SYNTAX) << "expected a import or method definition but got \"" << lexer->token_string() << "\"";
                 finished = true;

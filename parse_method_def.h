@@ -28,9 +28,9 @@ public:
 private: 
     Parser* parser;
 
-    bool read_input_parameters();
-    bool read_output_parameters();
+    bool read_parameters(sym_attr_type_t use);
     bool read_parameter_list();
+    string read_param_name();
 
 };
 

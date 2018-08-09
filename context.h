@@ -12,15 +12,15 @@ class Context {
 
 public:
     Context() {
-        context = string("@");
+        //context = string("@");
     }
     ~Context() {}
 
     // This is called when a class or method is entered. When a "{"
     // that is connected with a name is seen.
     void push_context(string name) {
-        context += name;
         context += "@";
+        context += name;
     }
 
     void push_anonymous_context() {

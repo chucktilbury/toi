@@ -6,24 +6,25 @@ bool ParseMethodDef::parse() {
     MARK("ENTER");
     lexer_token_t tok;
     bool retv = false;
-    const string name = parser->get_token_str();
+    string name;
 
     Logging(DEBUG) << "parsing method: " << name; 
     // store the name in the symbol table
+    parser->push_context(parser->get_token_str());
+    name = parser->get_context(); 
     parser->save_symbol(name);
     parser->save_symbol_attribute(name, "TYPE", FUNC_DEF, nullptr);
     parser->save_symbol_attribute(name, "CONTEXT", CONTEXT, new string(parser->get_context()));
 
-    parser->push_context(name);
-    if(true == (retv = read_input_parameters()))
+    if(true == (retv = read_parameters(INVAL_DEF)))
         return retv;
 
-    if(true == (retv = read_output_parameters()))
+    if(true == (retv = read_parameters(OUTVAL_DEF)))
         return retv;
 
     Statements* stats = new Statements();
     if(true == (retv = stats->parse(name)))
-        return retv;
+        return retv; 
 
     parser->pop_context();
     parser->save_symbol_attribute(name, "EXEC_LIST", EXEC_LIST, (void*)stats);
@@ -35,29 +36,136 @@ bool ParseMethodDef::parse() {
 // Input and output parameters have different attributes but the same parsing rules.
 // Method parameters are accessible in the scope of the method, but they must have
 // references outside that scope 
-bool ParseMethodDef::read_input_parameters() {
+bool ParseMethodDef::read_parameters(sym_attr_type_t use) {
     MARK("ENTER");
     lexer_token_t tok;
     bool retv = false;
+    bool finished = false;
+    bool comma_lock = false;
+
+    tok = parser->get_token();
+    if(tok == OPAREN) {
+        while(!finished) {
+            tok = parser->get_token();
+            switch(tok) {
+                case CPAREN:    // empty tuple 
+                    MARK("empty tuple");
+                    finished = true;
+                    break;
+                case COMMA:
+                    if(comma_lock) {
+                        Logging(SYNTAX) << "extra commas are not allowed in a tuple";
+                        finished = true;
+                        retv = true;
+                    }
+                    comma_lock = true;
+                    break;
+                case NUM:
+                    {
+                        comma_lock = false;
+                        string name;
+                        if(0 == ((name = read_param_name()).length())) {
+                            finished = true;
+                            retv = true;
+                        }
+                        else {
+                            string cont_name = parser->make_context(name);
+                            parser->save_symbol(cont_name);
+                            parser->save_symbol_attribute(cont_name, "TYPE", NUM_DEF, nullptr);
+                            parser->save_symbol_attribute(cont_name, "USE", use, nullptr);
+                        }
+                    }
+                    break;
+                case STRG:
+                    {
+                        comma_lock = false;
+                        string name;
+                        if(0 == ((name = read_param_name()).length())) {
+                            finished = true;
+                            retv = true;
+                        }
+                        else {
+                            string cont_name = parser->make_context(name);
+                            parser->save_symbol(cont_name);
+                            parser->save_symbol_attribute(cont_name, "TYPE", STRING_DEF, nullptr);
+                            parser->save_symbol_attribute(cont_name, "USE", use, nullptr);
+                        }
+                    }
+                    break;
+                case BOOL:
+                    {
+                        comma_lock = false;
+                        string name;
+                        if(0 == ((name = read_param_name()).length())) {
+                            finished = true;
+                            retv = true;
+                        }
+                        else {
+                            string cont_name = parser->make_context(name);
+                            parser->save_symbol(cont_name);
+                            parser->save_symbol_attribute(cont_name, "TYPE", BOOL_DEF, nullptr);
+                            parser->save_symbol_attribute(cont_name, "USE", use, nullptr);
+                        }
+                    }
+                    break;
+                case SYMBOL:
+                    {
+                        comma_lock = false;
+                        string name;
+                        if(0 == ((name = read_param_name()).length())) {
+                            finished = true;
+                            retv = true;
+                        }
+                        else {
+                            string cont_name = parser->make_context(name);
+                            parser->save_symbol(cont_name);
+                            parser->save_symbol_attribute(cont_name, "TYPE", USER_DEF_TYPE, nullptr);
+                            parser->save_symbol_attribute(cont_name, "USE", use, nullptr);
+                            parser->save_symbol_attribute(cont_name, "NAME", TYPE_NAME, &cont_name);
+                        }
+                    }
+                    break;
+                case END_CONTEXT:
+                case END_INPUT:
+                    Logging(SYNTAX) << "unexpected end of input";
+                    retv = true;
+                    break;
+                default:
+                    SYNTAX_ERR("parameter list");
+                    retv = true;
+            }
+        }
+    }
+    else {
+        SYNTAX_ERR("open paren");
+        retv = true;
+    }
 
     MARK("RETURN");
     return retv;
 }
 
-bool ParseMethodDef::read_output_parameters() {
+string ParseMethodDef::read_param_name() {
     MARK("ENTER");
-    lexer_token_t tok; 
-    bool retv = false;
+    lexer_token_t tok;
+    string retv = "";
+
+    tok = parser->get_token();
+    if(tok != COLON) {
+        SYNTAX_ERR(":");
+        return retv;
+    }
+
+    tok = parser->get_token();
+    if(tok != SYMBOL) {
+        SYNTAX_ERR("a symbol");
+        return retv;
+    }
+    else {
+        retv = parser->get_token_str();
+    }
 
     MARK("RETURN");
     return retv;
 }
 
-bool ParseMethodDef::read_parameter_list() {
-    MARK("ENTER");
-    lexer_token_t tok; 
-    bool retv = false;
-
-    MARK("RETURN");
-    return retv;
-}

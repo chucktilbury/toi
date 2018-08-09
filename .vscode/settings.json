@@ -1,9 +1,14 @@
 {
     "files.associations": {
+        "*.h": "cpp",
         "istream": "cpp",
         "ostream": "cpp",
         "type_traits": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "typeinfo": "cpp",
+        "optional": "cpp",
+        "ratio": "cpp",
+        "system_error": "cpp"
     },
     "files.exclude": {
         "**/.git": true,

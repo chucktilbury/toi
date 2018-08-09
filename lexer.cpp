@@ -137,6 +137,7 @@ lexer_token_t Lexer::get_token(void) {
         }
     }
 
+    Logging(DEBUG) << "token returned: " << token_buffer;
     return retv;
 }
 
