@@ -6,6 +6,13 @@
 
 using namespace std;
 
+typedef enum {
+    VAR_DEF,
+    VAR_REF,
+    METHOD_REF,
+    BRANCH,
+} state_map_attr_t;
+
 class Statements {
 
 public:
@@ -17,7 +24,7 @@ public:
     ~Statements() {
         MARK("ENTER");
         MARK("RETURN");
-    }
+    } 
 
     bool parse(const string name);
 

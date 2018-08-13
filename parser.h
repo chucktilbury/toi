@@ -36,10 +36,11 @@ public:
     // interface to the symbol table
     void save_symbol(string name) { symtable->add_symbol(name); }
     bool find_symbol(string name) { return symtable->check_symbol(name); }
-    void save_symbol_attribute(string sym_name, 
-                        string attr_name, 
-                        sym_attr_type_t type, void* data) {
+    void save_symbol_attribute(string sym_name, string attr_name, sym_attr_type_t type, void* data) {
         symtable->add_attrib(sym_name, attr_name, data, type);
+    }
+    void save_symbol_attribute(string sym_name, string attr_name, sym_attr_type_t type) {
+        symtable->add_attrib(sym_name, attr_name, nullptr, type);
     }
     void* get_symbol_attribute(const string sym_name, 
                         const string attr_name, 

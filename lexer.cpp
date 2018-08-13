@@ -256,7 +256,7 @@ void Lexer::get_comment(void)
     do 
     {
         ch = file_stack->read_character();
-    } while(ch != '\n' && ch != '#');    // BEWARE OF THE MAC USERS!
+    } while(ch != '#');    // BEWARE OF THE MAC USERS!
 }
 
 lexer_token_t Lexer::get_sstrg(void)

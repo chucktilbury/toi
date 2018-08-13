@@ -18,21 +18,8 @@ typedef enum {
     BOOL_DEF,           // definition of a boolean value
     OUTVAL_DEF,         // symtable object is a out value of a function definition
     INVAL_DEF,          // symtable object is a in of a function value definition
-    FUNC_CALL,          // symtable object is a reference to a function definition
-    FUNC_CALL_INVAL,    // symtable object is a reference to an input value of a function
-    FUNC_CALL_OUTVAL,   // symtable object is a reference to an output value of a function
-    FUNC_CALL_PARAM,    // symtable object is a reference to a parameter of a function
-    NUM_REF,            // symtable object is a reference to a number definition
-    STRING_REF,         // symtable object is a reference to a string definition
-    BOOL_REF,           // symtable object is a reference to a boolean definition
     EXEC_LIST,          // list of executable statements
-    BRANCH,             // a generic executable branch
-    IF_BRANCH,          // an "if" anonymous branch
-    ELSE_BRANCH,        // an anonymous "else" branch
-    WHILE_BRANCH,       // a "while" anonymous branch
-    FOR_BRANCH,         // an anonymous "for" branch
-    SWITCH_BRANCH,      // an anonymous switch/case branch
-    TYPE_NAME,
+    TYPE_NAME,          // name of a user defined type 
 } sym_attr_type_t;
 
 
