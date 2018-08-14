@@ -22,7 +22,7 @@ bool ParseMethodDef::parse() {
         return retv;
 
     Statements* stats = new Statements();
-    if(true == (retv = stats->parse(name)))
+    if(true == (retv = stats->parse()))
         return retv; 
 
     parser->pop_context();
