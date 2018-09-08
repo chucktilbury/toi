@@ -68,7 +68,7 @@ There are 3 native types. These types are implemented as built-in classes and my
 ```cpp
     if(not(eq(1,2))) { # do this # }
 ```
-1. string. A string is a series of characters. The physical format (i.e. whether there is a 0 at the end) is irrelavent. Strings are formatted and concatinated using the "+" operator, which calls the ".to_string" to convert the object, if needed.
+1. string. A string is a series of characters. The physical format (i.e. whether there is a 0 at the end) is irrelavent. Strings are formatted and concatenated using the "+" operator, which calls the ".to_string" to convert the object, if needed.
 1. num. Numbers are prepresented as doubles internally. All of the usual operators apply. There are no built-in methods such as ".cos" or whatever.
 
 ## Implementation plan
